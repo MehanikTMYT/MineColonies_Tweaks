@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.mixin.common.minecolonies;
 
+import org.spongepowered.asm.mixin.injection.Redirect;
+import java.util.function.Consumer;
 import java.util.List;
 
 import org.spongepowered.asm.mixin.Final;
@@ -68,19 +70,14 @@ public abstract class ItemCropMixin extends BlockItem implements ItemCropExtensi
 
 	}
 
-	@Inject(method = "appendHoverText", remap = true, at = @At(value = "RETURN"), cancellable = true)
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn, CallbackInfo ci)
+	// 26.1.2 port: the tooltip is a Consumer<Component>, so unwanted lines are filtered as they are emitted
+	// instead of being removed from the finished list.
+	@Redirect(method = "appendHoverText", remap = true, at = @At(value = "INVOKE", target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V"))
+	private void appendHoverText_accept(Consumer<Object> tooltip, Object line)
 	{
-		for (var i = 0; i < tooltip.size(); i++)
+		if (!(line instanceof Component component && this.testForRemove(component)))
 		{
-			var line = tooltip.get(i);
-
-			if (this.testForRemove(line))
-			{
-				tooltip.remove(i);
-				i--;
-			}
-
+			tooltip.accept(line);
 		}
 
 	}

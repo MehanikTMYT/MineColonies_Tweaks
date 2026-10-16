@@ -30,7 +30,7 @@ public class BatchRepairData
 	public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag)
 	{
 		this.costs.clear();
-		NBTUtils.streamCompound(tag.getList(TAG_COSTS, Tag.TAG_COMPOUND)).map(SerializationHelper.apply(provider, BuildingCost::deserialize)).forEach(this.costs::add);
+		NBTUtils.streamCompound(tag.getListOrEmpty(TAG_COSTS)).map(SerializationHelper.apply(provider, BuildingCost::deserialize)).forEach(this.costs::add);
 
 		this.markAsDontRepairs.clear();
 		this.markAsDontRepairs.addAll(BlockPosUtil.readPosListFromNBT(tag, TAG_MARK_AS_DONT_REPAIRS));

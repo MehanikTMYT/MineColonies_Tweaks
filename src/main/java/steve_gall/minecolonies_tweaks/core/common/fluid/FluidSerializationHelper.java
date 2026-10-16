@@ -34,12 +34,12 @@ public class FluidSerializationHelper
 
 	public static CompoundTag serializeTag(HolderLookup.Provider provider, FluidStack stack)
 	{
-		return (CompoundTag) stack.saveOptional(provider);
+		return (CompoundTag) com.minecolonies.api.util.Utils.serializeCodecMess(FluidStack.OPTIONAL_CODEC, provider, stack);
 	}
 
 	public static FluidStack deserializeTag(HolderLookup.Provider provider, CompoundTag tag)
 	{
-		return FluidStack.parseOptional(provider, tag);
+		return com.minecolonies.api.util.Utils.deserializeCodecMess(FluidStack.OPTIONAL_CODEC, provider, tag);
 	}
 
 	private FluidSerializationHelper()

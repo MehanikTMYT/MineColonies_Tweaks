@@ -1,6 +1,6 @@
 package steve_gall.minecolonies_tweaks.api.common.crafting;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import steve_gall.minecolonies_tweaks.api.common.SimpleObjectRegistry;
 
 public class CustomizedRecipeStorageRegistry extends SimpleObjectRegistry<ICustomizedRecipeStorage>
@@ -8,7 +8,7 @@ public class CustomizedRecipeStorageRegistry extends SimpleObjectRegistry<ICusto
 	public static final CustomizedRecipeStorageRegistry INSTANCE = new CustomizedRecipeStorageRegistry();
 
 	@Override
-	protected ResourceLocation getId(ICustomizedRecipeStorage object)
+	protected Identifier getId(ICustomizedRecipeStorage object)
 	{
 		return object.getId();
 	}

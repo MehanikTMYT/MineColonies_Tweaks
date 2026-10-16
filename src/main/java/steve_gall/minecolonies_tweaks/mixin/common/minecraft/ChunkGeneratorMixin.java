@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.mixin.common.minecraft;
 
+import net.minecraft.world.level.Level;
+import net.minecraft.resources.ResourceKey;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -9,7 +11,7 @@ import com.minecolonies.core.structures.EmptyColonyStructure;
 
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.SectionPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -25,7 +27,7 @@ import steve_gall.minecolonies_tweaks.core.common.MineColoniesTweaks;
 public class ChunkGeneratorMixin
 {
 	@Inject(method = "tryGenerateStructure", remap = true, at = @At(value = "HEAD"), cancellable = true)
-	private void tryGenerateStructure(StructureSet.StructureSelectionEntry entry, StructureManager structureManager, RegistryAccess registryAccess, RandomState randomState, StructureTemplateManager structureTemplateManager, long p_223110_, ChunkAccess chunkAccess, ChunkPos chunkPos, SectionPos sectionPos, CallbackInfoReturnable<Boolean> cir)
+	private void tryGenerateStructure(StructureSet.StructureSelectionEntry entry, StructureManager structureManager, RegistryAccess registryAccess, RandomState randomState, StructureTemplateManager structureTemplateManager, long p_223110_, ChunkAccess chunkAccess, ChunkPos chunkPos, SectionPos sectionPos, ResourceKey<Level> level, CallbackInfoReturnable<Boolean> cir)
 	{
 		Structure structure = entry.structure().value();
 
@@ -36,7 +38,7 @@ public class ChunkGeneratorMixin
 
 	}
 
-	private void testAndCancel(RandomState randomState, ResourceLocation randomKey, ChunkPos chunkPos, CallbackInfoReturnable<Boolean> cir)
+	private void testAndCancel(RandomState randomState, Identifier randomKey, ChunkPos chunkPos, CallbackInfoReturnable<Boolean> cir)
 	{
 		var test = Test.test(randomState, randomKey, chunkPos);
 

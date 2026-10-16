@@ -26,7 +26,7 @@ import com.minecolonies.core.datalistener.model.StudyItem;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import steve_gall.minecolonies_tweaks.core.common.building.module.StudyItemListModule;
 
@@ -48,7 +48,7 @@ public class StudyItemListModuleWindow extends AbstractModuleWindow<StudyItemLis
 	private int tick = 0;
 	private List<ItemCache> currentDisplayedList;
 
-	public StudyItemListModuleWindow(StudyItemListModule.View module, ResourceLocation res)
+	public StudyItemListModuleWindow(StudyItemListModule.View module, Identifier res)
 	{
 		super(module, res);
 
@@ -153,7 +153,7 @@ public class StudyItemListModuleWindow extends AbstractModuleWindow<StudyItemLis
 
 	private boolean testFilter(ItemStack stack, String lowerCaseFilter)
 	{
-		return this.descriptionCache.computeIfAbsent(stack, s -> s.getDescriptionId().toLowerCase(Locale.US)).contains(lowerCaseFilter) || //
+		return this.descriptionCache.computeIfAbsent(stack, s -> s.getItem().getDescriptionId().toLowerCase(Locale.US)).contains(lowerCaseFilter) || //
 				this.hoverNameCache.computeIfAbsent(stack, s -> s.getHoverName().getString().toLowerCase(Locale.US)).contains(lowerCaseFilter);
 	}
 
@@ -239,12 +239,12 @@ public class StudyItemListModuleWindow extends AbstractModuleWindow<StudyItemLis
 
 	public class ItemCache
 	{
-		public final ResourceLocation id;
+		public final Identifier id;
 		public final StudyItem item;
 		public final ItemStack icon;
 		public final List<MutableComponent> tooltip;
 
-		public ItemCache(Entry<ResourceLocation, StudyItem> entry)
+		public ItemCache(Entry<Identifier, StudyItem> entry)
 		{
 			this.id = entry.getKey();
 			this.item = entry.getValue();

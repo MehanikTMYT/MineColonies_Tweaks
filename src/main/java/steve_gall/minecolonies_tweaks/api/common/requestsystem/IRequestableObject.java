@@ -10,13 +10,13 @@ import com.minecolonies.core.colony.requestsystem.requests.AbstractRequest;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public interface IRequestableObject
 {
 	@NotNull
-	ResourceLocation getId();
+	Identifier getId();
 
 	@NotNull
 	Component getShortDisplayString();
@@ -31,7 +31,7 @@ public interface IRequestableObject
 	List<ItemStack> getDisplayStacks();
 
 	@NotNull
-	default ResourceLocation getDisplayIcon()
+	default Identifier getDisplayIcon()
 	{
 		return AbstractRequest.MISSING;
 	}

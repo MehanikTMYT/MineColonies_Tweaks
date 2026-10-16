@@ -17,7 +17,7 @@ import com.minecolonies.api.util.constant.TypeConstants;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import steve_gall.minecolonies_tweaks.api.common.CustomizableObjectRegistry;
 import steve_gall.minecolonies_tweaks.core.common.item.ItemSerializationHelper;
@@ -32,7 +32,7 @@ public class CustomizableDeliverable implements ICustomizableRequestable, IDeliv
 	public static final String TAG_RESULT = "Result";
 
 	@NotNull
-	private final ResourceLocation id;
+	private final Identifier id;
 	@Nullable
 	private final IDeliverableObject object;
 
@@ -46,7 +46,7 @@ public class CustomizableDeliverable implements ICustomizableRequestable, IDeliv
 		this.result = ItemStack.EMPTY;
 	}
 
-	public CustomizableDeliverable(@NotNull ResourceLocation id, @Nullable IDeliverableObject object, @NotNull ItemStack result)
+	public CustomizableDeliverable(@NotNull Identifier id, @Nullable IDeliverableObject object, @NotNull ItemStack result)
 	{
 		this.id = id;
 		this.object = object;
@@ -66,15 +66,15 @@ public class CustomizableDeliverable implements ICustomizableRequestable, IDeliv
 	@NotNull
 	public static CustomizableDeliverable deserialize(@NotNull HolderLookup.Provider provider, @NotNull IFactoryController controller, @NotNull CompoundTag compound)
 	{
-		var id = ResourceLocation.parse(compound.getString(TAG_ID));
-		var object = DeliverableObjectRegistry.INSTANCE.deserializeWithoutId(provider, controller, compound.getCompound(TAG_OBJECT), id);
-		var result = ItemSerializationHelper.deserializeTag(provider, compound.getCompound(TAG_RESULT));
+		var id = Identifier.parse(compound.getStringOr(TAG_ID, ""));
+		var object = DeliverableObjectRegistry.INSTANCE.deserializeWithoutId(provider, controller, compound.getCompoundOrEmpty(TAG_OBJECT), id);
+		var result = ItemSerializationHelper.deserializeTag(provider, compound.getCompoundOrEmpty(TAG_RESULT));
 		return new CustomizableDeliverable(id, object, result);
 	}
 
 	public static void serialize(@NotNull IFactoryController controller, @NotNull RegistryFriendlyByteBuf buffer, @NotNull CustomizableDeliverable input)
 	{
-		buffer.writeResourceLocation(input.getId());
+		buffer.writeIdentifier(input.getId());
 		buffer.writeNbt(DeliverableObjectRegistry.INSTANCE.serializeWithoutId(buffer.registryAccess(), controller, input.getObject()));
 		ItemSerializationHelper.serialize(buffer, input.getResult());
 	}
@@ -82,7 +82,7 @@ public class CustomizableDeliverable implements ICustomizableRequestable, IDeliv
 	@NotNull
 	public static CustomizableDeliverable deserialize(@NotNull IFactoryController controller, @NotNull RegistryFriendlyByteBuf buffer)
 	{
-		var id = buffer.readResourceLocation();
+		var id = buffer.readIdentifier();
 		var object = DeliverableObjectRegistry.INSTANCE.deserializeWithoutId(buffer.registryAccess(), controller, buffer.readNbt(), id);
 		var result = ItemSerializationHelper.deserialize(buffer);
 		return new CustomizableDeliverable(id, object, result);
@@ -97,7 +97,7 @@ public class CustomizableDeliverable implements ICustomizableRequestable, IDeliv
 
 	@Override
 	@NotNull
-	public ResourceLocation getId()
+	public Identifier getId()
 	{
 		return this.id;
 	}

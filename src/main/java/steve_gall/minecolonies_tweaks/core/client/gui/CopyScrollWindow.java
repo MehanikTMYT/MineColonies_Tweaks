@@ -1,5 +1,9 @@
 package steve_gall.minecolonies_tweaks.core.client.gui;
 
+import net.minecraft.client.Minecraft;
+
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +25,7 @@ import com.minecolonies.core.client.gui.AbstractWindowSkeleton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.neoforged.neoforge.network.PacketDistributor;
 import steve_gall.minecolonies_tweaks.core.common.MineColoniesTweaks;
@@ -63,7 +67,7 @@ public class CopyScrollWindow extends AbstractWindowSkeleton
 
 				if (textLabel.getHoverPane() instanceof Tooltip tooltip)
 				{
-					if (Screen.hasShiftDown())
+					if (Minecraft.getInstance().hasShiftDown())
 					{
 						tooltip.enable();
 					}
@@ -106,7 +110,7 @@ public class CopyScrollWindow extends AbstractWindowSkeleton
 				var cache = this.moduleViewCacheList.get(row);
 
 				this.moduleViewCacheList.remove(row);
-				PacketDistributor.sendToServer(new CopyScrollRemoveEntryMessage(cache.info.key(), this.hand));
+				ClientPacketDistributor.sendToServer(new CopyScrollRemoveEntryMessage(cache.info.key(), this.hand));
 			}
 			else
 			{
@@ -121,7 +125,7 @@ public class CopyScrollWindow extends AbstractWindowSkeleton
 	public class ModuleCache
 	{
 		public final ModuleViewInfo info;
-		public final ResourceLocation icon;
+		public final Identifier icon;
 		public final List<MutableComponent> tooltip;
 
 		public ModuleCache(ModuleViewInfo info)

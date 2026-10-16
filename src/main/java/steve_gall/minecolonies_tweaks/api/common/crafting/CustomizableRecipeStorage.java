@@ -22,7 +22,7 @@ import com.minecolonies.api.equipment.registry.EquipmentTypeEntry;
 
 import net.minecraft.core.DefaultedRegistry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -65,12 +65,12 @@ public class CustomizableRecipeStorage implements ICustomizableRecipeStorage
 
 		if (type != null && recipeTypes.containsKey(type))
 		{
-			this.recipeType = recipeTypes.get(type).getHandlerProducer().apply(this);
+			this.recipeType = recipeTypes.getValue(type).getHandlerProducer().apply(this);
 		}
 		else
 		{
 			var defaultKey = ((DefaultedRegistry<RecipeTypeEntry>) recipeTypes).getDefaultKey();
-			this.recipeType = recipeTypes.get(defaultKey).getHandlerProducer().apply(this);
+			this.recipeType = recipeTypes.getValue(defaultKey).getHandlerProducer().apply(this);
 		}
 
 		this.hasHashCode = false;
@@ -192,7 +192,7 @@ public class CustomizableRecipeStorage implements ICustomizableRecipeStorage
 	}
 
 	@Override
-	public ResourceLocation getRecipeSource()
+	public Identifier getRecipeSource()
 	{
 		return this.delegate.getRecipeSource();
 	}

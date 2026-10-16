@@ -16,7 +16,7 @@ import com.minecolonies.core.datalistener.model.StudyItem;
 import com.minecolonies.core.entity.ai.workers.AbstractEntityAISkill;
 import com.minecolonies.core.entity.ai.workers.education.EntityAIStudy;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import steve_gall.minecolonies_tweaks.core.common.init.MCTweaksBuildingModules;
 
 @Mixin(value = EntityAIStudy.class, remap = false)
@@ -28,7 +28,7 @@ public abstract class EntityAIStudyMixin extends AbstractEntityAISkill<JobStuden
 	}
 
 	@WrapOperation(method = "study", remap = false, at = @At(value = "INVOKE", target = "com/minecolonies/core/datalistener/StudyItemListener.getEntries", remap = false))
-	private Map<ResourceLocation, StudyItem> study_getAllStudyItems(StudyItemListener listener, Operation<Map<ResourceLocation, StudyItem>> operation)
+	private Map<Identifier, StudyItem> study_getAllStudyItems(StudyItemListener listener, Operation<Map<Identifier, StudyItem>> operation)
 	{
 		var module = this.building.getModule(MCTweaksBuildingModules.STUDY_ITEM_BLACKLIST);
 		var items = operation.call(listener);

@@ -10,7 +10,7 @@ import com.minecolonies.api.colony.requestsystem.factory.IFactoryController;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import steve_gall.minecolonies_tweaks.core.common.MineColoniesTweaks;
 
 public abstract class CustomizableObjectRegistry<OBJECT, ENTRY extends CustomizableObjectRegistry.Entry>
@@ -18,10 +18,10 @@ public abstract class CustomizableObjectRegistry<OBJECT, ENTRY extends Customiza
 	public static final String TAG_ID = "ID";
 	public static final String TAG_OBJECT = "Object";
 
-	public static final ResourceLocation EMPTY_ID = MineColoniesTweaks.rl("empty");
+	public static final Identifier EMPTY_ID = MineColoniesTweaks.rl("empty");
 	public static final String EMPTY_ID_STRING = EMPTY_ID.toString();
 
-	private final Map<ResourceLocation, ENTRY> map = new HashMap<>();
+	private final Map<Identifier, ENTRY> map = new HashMap<>();
 
 	public CustomizableObjectRegistry()
 	{
@@ -40,7 +40,7 @@ public abstract class CustomizableObjectRegistry<OBJECT, ENTRY extends Customiza
 		this.map.put(id, entry);
 	}
 
-	protected abstract ResourceLocation getId(OBJECT object);
+	protected abstract Identifier getId(OBJECT object);
 
 	protected abstract void serializeObject(@NotNull HolderLookup.Provider provider, @NotNull IFactoryController controller, @NotNull CompoundTag tag, @NotNull ENTRY entry, @Nullable OBJECT object);
 
@@ -101,11 +101,11 @@ public abstract class CustomizableObjectRegistry<OBJECT, ENTRY extends Customiza
 	@Nullable
 	public OBJECT deserialize(@NotNull HolderLookup.Provider provider, @NotNull IFactoryController controller, @NotNull CompoundTag tag)
 	{
-		var id = ResourceLocation.parse(tag.getString(TAG_ID));
-		return deserializeWithoutId(provider, controller, tag.getCompound(TAG_OBJECT), id);
+		var id = Identifier.parse(tag.getStringOr(TAG_ID, ""));
+		return deserializeWithoutId(provider, controller, tag.getCompoundOrEmpty(TAG_OBJECT), id);
 	}
 
-	public OBJECT deserializeWithoutId(@NotNull HolderLookup.Provider provider, @NotNull IFactoryController controller, @NotNull CompoundTag tag, ResourceLocation id)
+	public OBJECT deserializeWithoutId(@NotNull HolderLookup.Provider provider, @NotNull IFactoryController controller, @NotNull CompoundTag tag, Identifier id)
 	{
 		var entry = this.map.get(id);
 
@@ -120,15 +120,15 @@ public abstract class CustomizableObjectRegistry<OBJECT, ENTRY extends Customiza
 	public static abstract class Entry
 	{
 		@NotNull
-		private ResourceLocation id;
+		private Identifier id;
 
-		public Entry(@NotNull ResourceLocation id)
+		public Entry(@NotNull Identifier id)
 		{
 			this.id = id;
 		}
 
 		@NotNull
-		public ResourceLocation getId()
+		public Identifier getId()
 		{
 			return this.id;
 		}

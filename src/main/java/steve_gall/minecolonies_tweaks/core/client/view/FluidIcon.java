@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.core.client.view;
 
+import net.minecraft.client.Minecraft;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +22,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -50,7 +52,7 @@ public class FluidIcon extends Pane
 
 		if (fluidName != null)
 		{
-			var fluid = BuiltInRegistries.FLUID.get(ResourceLocation.parse(fluidName));
+			var fluid = BuiltInRegistries.FLUID.getValue(Identifier.parse(fluidName));
 
 			if (fluid != null)
 			{
@@ -128,10 +130,10 @@ public class FluidIcon extends Pane
 		if (!this.isDataEmpty())
 		{
 			var ms = target.pose();
-			ms.pushPose();
-			ms.translate(this.x, this.y, 0.0F);
-			RenderUtils.renderFluid(ms, 16, 16, this.fluidStack);
-			ms.popPose();
+			ms.pushMatrix();
+			ms.translate(this.x, this.y);
+			RenderUtils.renderFluid(target, 16, 16, this.fluidStack);
+			ms.popMatrix();
 		}
 
 	}
@@ -197,15 +199,15 @@ public class FluidIcon extends Pane
 		if (tooltipFlags.isAdvanced() && tooltipFlags.isCreative())
 		{
 			var c = nameOffset + 1;
-			BuiltInRegistries.FLUID.getHolder(id).map(Holder::tags).ifPresent(tags -> tags.forEach(tag -> tooltipList.add(c, wrapShift(Component.literal("#" + tag.location()).withStyle(ChatFormatting.DARK_PURPLE)))));
+			BuiltInRegistries.FLUID.get(id).map(Holder::tags).ifPresent(tags -> tags.forEach(tag -> tooltipList.add(c, wrapShift(Component.literal("#" + tag.location()).withStyle(ChatFormatting.DARK_PURPLE)))));
 		}
 
 		prevTooltipSize = this.appendTooltip(tooltipList, tooltipFlags, prevTooltipSize);
 
 		if (prevTooltipSize != tooltipList.size())
 		{
-			tooltipList.add(ToggleableTextComponent.ofNegated(Screen::hasShiftDown, Component.empty()));
-			tooltipList.add(ToggleableTextComponent.ofNegated(Screen::hasShiftDown, Component.translatable("blockui.tooltip.item_additional_info", Component.translatable("key.keyboard.left.shift")).withStyle(ChatFormatting.GOLD)));
+			tooltipList.add(ToggleableTextComponent.ofNegated(() -> Minecraft.getInstance().hasShiftDown(), Component.empty()));
+			tooltipList.add(ToggleableTextComponent.ofNegated(() -> Minecraft.getInstance().hasShiftDown(), Component.translatable("blockui.tooltip.item_additional_info", Component.translatable("key.keyboard.left.shift")).withStyle(ChatFormatting.GOLD)));
 		}
 
 		tooltipList.add(nameOffset, FIX_VANILLA_TOOLTIP);
@@ -214,12 +216,12 @@ public class FluidIcon extends Pane
 
 	protected static MutableComponent wrapShift(final MutableComponent wrapped)
 	{
-		return ToggleableTextComponent.of(Screen::hasShiftDown, wrapped);
+		return ToggleableTextComponent.of(() -> Minecraft.getInstance().hasShiftDown(), wrapped);
 	}
 
 	protected static MutableComponent wrapShift(final MutableComponent wrapped, final boolean shouldWrap)
 	{
-		return shouldWrap ? ToggleableTextComponent.of(Screen::hasShiftDown, wrapped) : wrapped;
+		return shouldWrap ? ToggleableTextComponent.of(() -> Minecraft.getInstance().hasShiftDown(), wrapped) : wrapped;
 	}
 
 }

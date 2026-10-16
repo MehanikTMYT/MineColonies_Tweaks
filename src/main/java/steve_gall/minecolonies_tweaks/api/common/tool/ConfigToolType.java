@@ -8,7 +8,7 @@ import com.google.gson.JsonObject;
 import com.minecolonies.api.equipment.ModEquipmentTypes;
 import com.minecolonies.api.util.ItemStackUtils;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import steve_gall.minecolonies_tweaks.core.common.util.GsonHelper2;
@@ -28,7 +28,7 @@ public class ConfigToolType extends CustomToolType
 
 	public ConfigToolType(Builder builder, String namespace)
 	{
-		super(ResourceLocation.fromNamespaceAndPath(namespace, builder.name));
+		super(Identifier.fromNamespaceAndPath(namespace, builder.name));
 
 		this.autoLevelType = builder.autoLevelType;
 		this.translationKey = builder.translationKey.orElseGet(() -> getFallbackTranslationKey(this.getName()));

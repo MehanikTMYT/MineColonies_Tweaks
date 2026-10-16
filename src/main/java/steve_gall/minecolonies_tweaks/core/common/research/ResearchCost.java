@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.core.common.research;
 
+import net.minecraft.core.UUIDUtil;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +25,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import steve_gall.minecolonies_tweaks.api.common.requestsystem.CustomizableRequestable;
 import steve_gall.minecolonies_tweaks.api.common.requestsystem.IRequestableObject;
@@ -32,16 +34,16 @@ import steve_gall.minecolonies_tweaks.core.common.util.SerializationHelper;
 
 public class ResearchCost implements IRequestableObject
 {
-	public static final ResourceLocation ID = MineColoniesTweaks.rl("research_cost");
+	public static final Identifier ID = MineColoniesTweaks.rl("research_cost");
 	public static final Component DISPLAY_STRING = Component.translatable("minecolonies_tweaks.text.research_cost");
-	public static final ResourceLocation ICON = ResourceLocation.parse("textures/item/book.png");
+	public static final Identifier ICON = Identifier.parse("textures/item/book.png");
 
 	public static ResearchCost deserialize(HolderLookup.Provider provider, IFactoryController controller, CompoundTag compound)
 	{
-		var branch = ResourceLocation.parse(compound.getString("branch"));
-		var research = ResourceLocation.parse(compound.getString("research"));
-		var items = NBTUtils.streamCompound(compound.getList("stacks", Tag.TAG_COMPOUND)).map(SerializationHelper.<ItemStorage> deserializerTag(provider)).toList();
-		var requester = compound.hasUUID("requester") ? compound.getUUID("requester") : null;
+		var branch = Identifier.parse(compound.getStringOr("branch", ""));
+		var research = Identifier.parse(compound.getStringOr("research", ""));
+		var items = NBTUtils.streamCompound(compound.getListOrEmpty("stacks")).map(SerializationHelper.<ItemStorage> deserializerTag(provider)).toList();
+		var requester = compound.read("requester", UUIDUtil.CODEC).isPresent() ? compound.read("requester", UUIDUtil.CODEC).orElseThrow() : null;
 
 		return new ResearchCost(branch, research, items, requester);
 	}
@@ -54,12 +56,12 @@ public class ResearchCost implements IRequestableObject
 
 		if (cost.requester != null)
 		{
-			compound.putUUID("requester", cost.requester);
+			compound.store("requester", UUIDUtil.CODEC, cost.requester);
 		}
 
 	}
 
-	public static boolean test(IRequest<?> request, ResourceLocation branch, ResourceLocation research)
+	public static boolean test(IRequest<?> request, Identifier branch, Identifier research)
 	{
 		if (request.getRequest() instanceof CustomizableRequestable cr && cr.getObject() instanceof ResearchCost other)
 		{
@@ -73,7 +75,7 @@ public class ResearchCost implements IRequestableObject
 		return false;
 	}
 
-	public static boolean isRequested(IBuilding building, ResourceLocation branch, ResourceLocation research)
+	public static boolean isRequested(IBuilding building, Identifier branch, Identifier research)
 	{
 		for (var token : building.getOpenRequestsByRequestableType().getOrDefault(CustomizableRequestable.TYPE_TOKEN, Collections.emptyList()))
 		{
@@ -89,7 +91,7 @@ public class ResearchCost implements IRequestableObject
 		return false;
 	}
 
-	public static boolean isRequested(IBuildingView buildingView, ResourceLocation branch, ResourceLocation research)
+	public static boolean isRequested(IBuildingView buildingView, Identifier branch, Identifier research)
 	{
 		for (var request : buildingView.getOpenRequestsOfBuilding())
 		{
@@ -103,15 +105,15 @@ public class ResearchCost implements IRequestableObject
 		return false;
 	}
 
-	private final ResourceLocation branchId;
-	private final ResourceLocation researchId;
+	private final Identifier branchId;
+	private final Identifier researchId;
 	private final List<ItemStorage> items;
 	private final UUID requester;
 
 	private final Component longText;
 	private final List<MutableComponent> tooltip;
 
-	public ResearchCost(ResourceLocation branchId, ResourceLocation researchId, List<ItemStorage> items, UUID requester)
+	public ResearchCost(Identifier branchId, Identifier researchId, List<ItemStorage> items, UUID requester)
 	{
 		this.branchId = branchId;
 		this.researchId = researchId;
@@ -156,7 +158,7 @@ public class ResearchCost implements IRequestableObject
 	}
 
 	@Override
-	public @NotNull ResourceLocation getId()
+	public @NotNull Identifier getId()
 	{
 		return ID;
 	}
@@ -180,7 +182,7 @@ public class ResearchCost implements IRequestableObject
 	}
 
 	@Override
-	public ResourceLocation getDisplayIcon()
+	public Identifier getDisplayIcon()
 	{
 		return ICON;
 	}
@@ -197,12 +199,12 @@ public class ResearchCost implements IRequestableObject
 		return obj instanceof ResearchCost other && other.branchId.equals(this.branchId) && other.researchId.equals(this.researchId);
 	}
 
-	public ResourceLocation getBranchId()
+	public Identifier getBranchId()
 	{
 		return this.branchId;
 	}
 
-	public ResourceLocation getResearchId()
+	public Identifier getResearchId()
 	{
 		return this.researchId;
 	}

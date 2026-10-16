@@ -7,25 +7,25 @@ import org.jetbrains.annotations.NotNull;
 
 import com.minecolonies.api.colony.buildings.modules.IBuildingModuleView;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface IIdListModuleView extends IBuildingModuleView
 {
-	default boolean addId(@NotNull ResourceLocation id)
+	default boolean addId(@NotNull Identifier id)
 	{
 		return this.addIds(Collections.singletonList(id));
 	}
 
-	boolean addIds(@NotNull Collection<ResourceLocation> ids);
+	boolean addIds(@NotNull Collection<Identifier> ids);
 
-	boolean containsId(@NotNull ResourceLocation id);
+	boolean containsId(@NotNull Identifier id);
 
-	default boolean removeId(@NotNull ResourceLocation id)
+	default boolean removeId(@NotNull Identifier id)
 	{
 		return this.removeIds(Collections.singletonList(id));
 	}
 
-	boolean removeIds(@NotNull Collection<ResourceLocation> ids);
+	boolean removeIds(@NotNull Collection<Identifier> ids);
 
 	void clearIds();
 

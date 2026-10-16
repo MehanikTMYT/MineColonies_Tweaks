@@ -35,7 +35,7 @@ public class ItemSerializationHelper
 
 	public static CompoundTag serializeTag(HolderLookup.Provider provider, ItemStack stack)
 	{
-		return (CompoundTag) stack.saveOptional(provider);
+		return (CompoundTag) com.minecolonies.api.util.Utils.saveOptionalItemStack(provider, stack);
 	}
 
 	public static ItemStack deserializeTag(HolderLookup.Provider provider, CompoundTag tag)

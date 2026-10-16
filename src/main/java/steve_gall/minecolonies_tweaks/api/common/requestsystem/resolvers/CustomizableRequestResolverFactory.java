@@ -69,9 +69,9 @@ public class CustomizableRequestResolverFactory<RESOLVER extends ICustomizableRe
 	@Override
 	public @NotNull RESOLVER deserialize(@NotNull HolderLookup.Provider provider, @NotNull IFactoryController controller, @NotNull CompoundTag tag) throws Throwable
 	{
-		ILocation location = controller.deserializeTag(provider, tag.getCompound("location"));
-		IToken<?> token = controller.deserializeTag(provider, tag.getCompound("token"));
-		return this.deserializer.deserialze(location, token, tag.getCompound("impl"));
+		ILocation location = controller.deserializeTag(provider, tag.getCompoundOrEmpty("location"));
+		IToken<?> token = controller.deserializeTag(provider, tag.getCompoundOrEmpty("token"));
+		return this.deserializer.deserialze(location, token, tag.getCompoundOrEmpty("impl"));
 	}
 
 	@Override

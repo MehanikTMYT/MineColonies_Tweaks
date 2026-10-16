@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.core.common.command;
 
+import net.minecraft.server.permissions.Permissions;
+
 import java.util.List;
 
 import com.minecolonies.api.IMinecoloniesAPI;
@@ -17,9 +19,9 @@ import com.mojang.brigadier.context.CommandContext;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import steve_gall.minecolonies_tweaks.core.common.research.LocalResearchTreeExtension;
 
 public class ResearchCommands
@@ -94,7 +96,7 @@ public class ResearchCommands
 		});
 	}
 
-	private static void complete(IGlobalResearchTree globalResearchTree, IColony colony, ResourceLocation branchId, List<ResourceLocation> researchIds)
+	private static void complete(IGlobalResearchTree globalResearchTree, IColony colony, Identifier branchId, List<Identifier> researchIds)
 	{
 		var globalBranchData = globalResearchTree.getBranchData(branchId);
 		var localResearchManager = colony.getResearchManager();
@@ -129,9 +131,9 @@ public class ResearchCommands
 		;
 	}
 
-	private static RequiredArgumentBuilder<CommandSourceStack, ResourceLocation> newArgumentbranchID()
+	private static RequiredArgumentBuilder<CommandSourceStack, Identifier> newArgumentbranchID()
 	{
-		return IMCCommand.newArgument("branchID", ResourceLocationArgument.id()).suggests((context, builder) ->
+		return IMCCommand.newArgument("branchID", IdentifierArgument.id()).suggests((context, builder) ->
 		{
 			for (var branchID : IMinecoloniesAPI.getInstance().getGlobalResearchTree().getBranches())
 			{
@@ -143,12 +145,12 @@ public class ResearchCommands
 
 	public static int runOptionalBranch(CommandContext<CommandSourceStack> context, boolean needPermission, boolean hasBranch, ResearchRunFunction func)
 	{
-		if (needPermission && !context.getSource().hasPermission(Commands.LEVEL_GAMEMASTERS))
+		if (needPermission && !context.getSource().permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
 		{
 			context.getSource().sendSuccess(() -> Component.translatable(CommandTranslationConstants.COMMAND_REQUIRES_OP), true);
 			return 0;
 		}
-		else if (!context.getSource().hasPermission(Commands.LEVEL_OWNERS))
+		else if (!context.getSource().permissions().hasPermission(Permissions.COMMANDS_OWNER))
 		{
 			context.getSource().sendSuccess(() -> Component.translatable(CommandTranslationConstants.COMMAND_DISABLED_IN_CONFIG), true);
 			return 0;
@@ -165,7 +167,7 @@ public class ResearchCommands
 
 		if (hasBranch)
 		{
-			var branchId = ResourceLocationArgument.getId(context, "branchID");
+			var branchId = IdentifierArgument.getId(context, "branchID");
 
 			if (!IMinecoloniesAPI.getInstance().getGlobalResearchTree().getBranches().contains(branchId))
 			{
@@ -184,7 +186,7 @@ public class ResearchCommands
 
 	public interface ResearchRunFunction
 	{
-		int applyAsInt(CommandContext<CommandSourceStack> context, IColony colony, ResourceLocation branchId);
+		int applyAsInt(CommandContext<CommandSourceStack> context, IColony colony, Identifier branchId);
 	}
 
 }

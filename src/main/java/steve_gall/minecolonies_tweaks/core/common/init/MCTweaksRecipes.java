@@ -10,7 +10,7 @@ import steve_gall.minecolonies_tweaks.core.common.crafting.ComponentMergeShapele
 public class MCTweaksRecipes
 {
 	public static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, MineColoniesTweaks.MOD_ID);
-	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ComponentMergeShapelessRecipe>> COMPONENT_MERGE_SHAPELESS_SERIALIZER = SERIALIZERS.register("component_merge_shapeless", () -> new ComponentMergeShapelessRecipe.Serializer());
+	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ComponentMergeShapelessRecipe>> COMPONENT_MERGE_SHAPELESS_SERIALIZER = SERIALIZERS.register("component_merge_shapeless", ComponentMergeShapelessRecipe::createSerializer);
 
 	private MCTweaksRecipes()
 	{

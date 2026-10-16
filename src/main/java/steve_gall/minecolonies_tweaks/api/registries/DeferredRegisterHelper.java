@@ -18,7 +18,7 @@ import com.minecolonies.api.sounds.EventType;
 import com.minecolonies.api.util.Tuple;
 import com.minecolonies.api.util.constant.Constants;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -27,7 +27,7 @@ public class DeferredRegisterHelper
 {
 	public static DeferredRegister<BuildingEntry> buildings(String modid)
 	{
-		return DeferredRegister.create(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "buildings"), modid);
+		return DeferredRegister.create(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "buildings"), modid);
 	}
 
 	public static DeferredHolder<BuildingEntry, BuildingEntry> registerBuilding(DeferredRegister<BuildingEntry> register, String name, Consumer<BuildingEntry.Builder> consumer)
@@ -45,7 +45,7 @@ public class DeferredRegisterHelper
 
 	public static DeferredRegister<GuardType> guardTypes(String modid)
 	{
-		return DeferredRegister.create(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "guardtypes"), modid);
+		return DeferredRegister.create(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "guardtypes"), modid);
 	}
 
 	public static DeferredHolder<GuardType, GuardType> registerGuardType(DeferredRegister<GuardType> register, DeferredHolder<JobEntry, JobEntry> jobEntry, Consumer<GuardType.Builder> consumer)
@@ -71,7 +71,7 @@ public class DeferredRegisterHelper
 
 	public static DeferredRegister<JobEntry> jobs(String modid)
 	{
-		return DeferredRegister.create(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "jobs"), modid);
+		return DeferredRegister.create(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "jobs"), modid);
 	}
 
 	public static DeferredHolder<JobEntry, JobEntry> registerJobEntry(DeferredRegister<JobEntry> register, String name, Consumer<JobEntry.Builder> consumer)
@@ -102,11 +102,11 @@ public class DeferredRegisterHelper
 				var prefix = "citizen." + name;
 				var suffix = i + "." + event.getId();
 
-				var maleSoundEvent = SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(namespace, prefix + ".male" + suffix));
-				var femaleSoundEvent = SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(namespace, prefix + ".female" + suffix));
+				var maleSoundEvent = SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath(namespace, prefix + ".male" + suffix));
+				var femaleSoundEvent = SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath(namespace, prefix + ".female" + suffix));
 
-				register.register(maleSoundEvent.getLocation().getPath(), () -> maleSoundEvent);
-				register.register(femaleSoundEvent.getLocation().getPath(), () -> femaleSoundEvent);
+				register.register(maleSoundEvent.location().getPath(), () -> maleSoundEvent);
+				register.register(femaleSoundEvent.location().getPath(), () -> femaleSoundEvent);
 				individualSounds.add(new Tuple<>(maleSoundEvent, femaleSoundEvent));
 			}
 
@@ -118,10 +118,10 @@ public class DeferredRegisterHelper
 
 	public static DeferredRegister<CraftingType> craftingTypes(String modid)
 	{
-		return DeferredRegister.create(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "craftingtypes"), modid);
+		return DeferredRegister.create(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "craftingtypes"), modid);
 	}
 
-	public static <T extends CraftingType> DeferredHolder<CraftingType, T> registerCraftingType(DeferredRegister<CraftingType> register, String name, Function<ResourceLocation, T> func)
+	public static <T extends CraftingType> DeferredHolder<CraftingType, T> registerCraftingType(DeferredRegister<CraftingType> register, String name, Function<Identifier, T> func)
 	{
 		var id = register.createTagKey(name).location();
 		return register.register(name, () -> func.apply(id));
@@ -129,10 +129,10 @@ public class DeferredRegisterHelper
 
 	public static DeferredRegister<RecipeTypeEntry> recipeTypeEntries(String modid)
 	{
-		return DeferredRegister.create(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "recipetypeentries"), modid);
+		return DeferredRegister.create(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "recipetypeentries"), modid);
 	}
 
-	public static DeferredHolder<RecipeTypeEntry, RecipeTypeEntry> registerRecipeTypeEntry(DeferredRegister<RecipeTypeEntry> register, String name, BiConsumer<ResourceLocation, RecipeTypeEntry.Builder> consumer)
+	public static DeferredHolder<RecipeTypeEntry, RecipeTypeEntry> registerRecipeTypeEntry(DeferredRegister<RecipeTypeEntry> register, String name, BiConsumer<Identifier, RecipeTypeEntry.Builder> consumer)
 	{
 		var id = register.createTagKey(name).location();
 		return register.register(name, () ->
@@ -147,7 +147,7 @@ public class DeferredRegisterHelper
 
 	public static DeferredRegister<EquipmentTypeEntry> equipmentTypes(String modid)
 	{
-		return DeferredRegister.create(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "equipmenttypes"), modid);
+		return DeferredRegister.create(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "equipmenttypes"), modid);
 	}
 
 	private DeferredRegisterHelper()

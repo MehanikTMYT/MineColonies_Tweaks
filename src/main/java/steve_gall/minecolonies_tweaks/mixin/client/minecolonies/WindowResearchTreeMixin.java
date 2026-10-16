@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.mixin.client.minecolonies;
 
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+
 import static com.minecolonies.api.research.util.ResearchConstants.COLOR_TEXT_DARK;
 import static com.minecolonies.api.research.util.ResearchConstants.COLOR_TEXT_UNFULFILLED;
 import static com.minecolonies.api.research.util.ResearchConstants.GRADIENT_HEIGHT;
@@ -39,7 +41,7 @@ import com.minecolonies.core.client.gui.modules.building.UniversityModuleWindow;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.PacketDistributor;
 import steve_gall.minecolonies_tweaks.api.common.building.BuildingPos;
 import steve_gall.minecolonies_tweaks.core.common.config.MCTweaksConfigServer;
@@ -61,19 +63,19 @@ public abstract class WindowResearchTreeMixin extends AbstractWindowSkeleton
 	@Shadow(remap = false)
 	private IBuildingView building;
 	@Shadow(remap = false)
-	private ResourceLocation branch;
+	private Identifier branch;
 	@Shadow(remap = false)
 	private ButtonImage undoButton;
 	@Shadow(remap = false)
 	private Text undoText;
 
-	public WindowResearchTreeMixin(ResourceLocation resource)
+	public WindowResearchTreeMixin(Identifier resource)
 	{
 		super(resource);
 	}
 
 	@WrapOperation(method = "<init>", remap = false, at = @At(value = "INVOKE", target = "com/minecolonies/api/research/ILocalResearchTree.branchFinishedHighestLevel", remap = false))
-	private boolean init_branchFinishedHighestLevel(ILocalResearchTree tree, ResourceLocation branch, Operation<Boolean> operation)
+	private boolean init_branchFinishedHighestLevel(ILocalResearchTree tree, Identifier branch, Operation<Boolean> operation)
 	{
 		if (this.mc.player.isCreative() || MCTweaksConfigServer.INSTANCE.researches.ignoreConstraints.get())
 		{
@@ -157,7 +159,7 @@ public abstract class WindowResearchTreeMixin extends AbstractWindowSkeleton
 		{
 			if (ResearchCostResolver.hasResolver(this.building))
 			{
-				var researchId = ResourceLocation.parse(buttonId.substring(minecolonies_tweaks$MISSING_COST_PREFIX.length()));
+				var researchId = Identifier.parse(buttonId.substring(minecolonies_tweaks$MISSING_COST_PREFIX.length()));
 				var research = IGlobalResearchTree.getInstance().getResearch(this.branch, researchId);
 				this.minecolonies_tweaks$drawRequestButton(button, research);
 			}
@@ -168,7 +170,7 @@ public abstract class WindowResearchTreeMixin extends AbstractWindowSkeleton
 			this.close();
 
 			var branchId = this.branch;
-			var researchId = ResourceLocation.parse(buttonId.substring(minecolonies_tweaks$REQUEST_PREFIX.length()));
+			var researchId = Identifier.parse(buttonId.substring(minecolonies_tweaks$REQUEST_PREFIX.length()));
 			var player = this.mc.player;
 
 			if (ResearchCost.isRequested(this.building, branchId, researchId))
@@ -181,7 +183,7 @@ public abstract class WindowResearchTreeMixin extends AbstractWindowSkeleton
 				var research = IGlobalResearchTree.getInstance().getResearch(branchId, researchId);
 				ResearchCostSelector.open(this.last, research, items ->
 				{
-					PacketDistributor.sendToServer(new ResearchCostRequestMessage(new BuildingPos(this.building), research.getBranch(), research.getId(), items));
+					ClientPacketDistributor.sendToServer(new ResearchCostRequestMessage(new BuildingPos(this.building), research.getBranch(), research.getId(), items));
 				});
 			}
 
@@ -193,7 +195,7 @@ public abstract class WindowResearchTreeMixin extends AbstractWindowSkeleton
 	private void minecolonies_tweaks$drawRequestButton(Button parent, IGlobalResearch research)
 	{
 		var undoButton = this.undoButton;
-		undoButton.setImage(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, MEDIUM_SIZED_BUTTON_RES));
+		undoButton.setImage(Identifier.fromNamespaceAndPath(Constants.MOD_ID, MEDIUM_SIZED_BUTTON_RES));
 		undoButton.setSize(BUTTON_LENGTH, BUTTON_HEIGHT);
 		undoButton.setPosition(parent.getX() + (GRADIENT_WIDTH - BUTTON_LENGTH) / 2, parent.getY() + TEXT_Y_OFFSET + (GRADIENT_HEIGHT - BUTTON_HEIGHT) / 2);
 		undoButton.setID(minecolonies_tweaks$REQUEST_PREFIX + research.getId().toString());

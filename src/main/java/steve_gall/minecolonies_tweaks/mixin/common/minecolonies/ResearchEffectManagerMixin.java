@@ -14,7 +14,7 @@ import com.minecolonies.api.research.IResearchEffect;
 import com.minecolonies.core.research.GlobalResearchEffect;
 import com.minecolonies.core.research.ResearchEffectManager;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.common.NeoForge;
 import steve_gall.minecolonies_tweaks.api.common.research.ResearchEffectChangedEventArgs;
 import steve_gall.minecolonies_tweaks.core.common.research.ResearchEffectManagerExtension;
@@ -26,10 +26,10 @@ public abstract class ResearchEffectManagerMixin implements ResearchEffectManage
 	private IColony minecolonies_tweaks$colony;
 
 	@Shadow(remap = false)
-	private Map<ResourceLocation, IResearchEffect> effectMap;
+	private Map<Identifier, IResearchEffect> effectMap;
 
 	@Shadow(remap = false)
-	abstract double getEffectStrength(ResourceLocation id);
+	abstract double getEffectStrength(Identifier id);
 
 	@Unique
 	private boolean minecolonies_tweaks$isServerSide()

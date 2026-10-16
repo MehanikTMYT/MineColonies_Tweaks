@@ -57,8 +57,8 @@ public class CustomizableRecipeStorageFactory implements IFactory<IToken<?>, Cus
 	@Override
 	public @NotNull CustomizableRecipeStorage deserialize(@NotNull HolderLookup.Provider provider, @NotNull IFactoryController controller, @NotNull CompoundTag tag) throws Throwable
 	{
-		var impl = CustomizedRecipeStorageRegistry.INSTANCE.deserialize(provider, controller, tag.getCompound(TAG_IMPL));
-		IToken<?> token = controller.deserializeTag(provider, tag.getCompound(TAG_TOKEN));
+		var impl = CustomizedRecipeStorageRegistry.INSTANCE.deserialize(provider, controller, tag.getCompoundOrEmpty(TAG_IMPL));
+		IToken<?> token = controller.deserializeTag(provider, tag.getCompoundOrEmpty(TAG_TOKEN));
 		return new CustomizableRecipeStorage(token, impl);
 	}
 

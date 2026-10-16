@@ -8,7 +8,7 @@ import com.minecolonies.api.crafting.ItemStorage;
 import com.minecolonies.api.equipment.registry.EquipmentTypeEntry;
 
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -16,7 +16,7 @@ import steve_gall.minecolonies_tweaks.core.common.crafting.CustomizableRecipeSto
 
 public interface ICustomizedRecipeStorage
 {
-	ResourceLocation getId();
+	Identifier getId();
 
 	List<ItemStorage> getInput();
 
@@ -30,9 +30,9 @@ public interface ICustomizedRecipeStorage
 
 	Block getIntermediate();
 
-	ResourceLocation getRecipeSource();
+	Identifier getRecipeSource();
 
-	ResourceLocation getRecipeType();
+	Identifier getRecipeType();
 
 	ResourceKey<LootTable> getLootTable();
 

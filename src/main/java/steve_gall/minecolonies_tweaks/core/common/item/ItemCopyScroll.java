@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.core.common.item;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,10 +34,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -53,7 +54,7 @@ public class ItemCopyScroll extends Item
 	public static final Component MESSAGE_OLD_VERSION = Component.translatable("item.minecolonies_tweaks.copyscroll.old_version");
 	public static final Component MESSAGE_CLEARED = Component.translatable("item.minecolonies_tweaks.copyscroll.cleared");
 	public static final Component NAME_NULL = Component.empty();
-	public static final ResourceLocation ICON_NULL = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/modules/tweaks_null");
+	public static final Identifier ICON_NULL = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/modules/tweaks_null");
 
 	public static final List<Component> TOOLTIPS = Arrays.asList(//
 			Component.translatable("item.minecolonies_tweaks.copyscroll.tooltip1"), //
@@ -68,11 +69,11 @@ public class ItemCopyScroll extends Item
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag)
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag)
 	{
-		super.appendHoverText(stack, context, tooltip, flag);
+		super.appendHoverText(stack, context, display, tooltip, flag);
 
-		tooltip.addAll(TOOLTIPS);
+		TOOLTIPS.forEach(tooltip);
 
 		var data = stack.get(MCTweaksDataComponents.COPYSCROLL_DATA);
 
@@ -81,12 +82,12 @@ public class ItemCopyScroll extends Item
 			return;
 		}
 
-		tooltip.add(Component.empty());
-		tooltip.add(Component.translatable("item.minecolonies_tweaks.copyscroll.data", Component.empty().append(data.name()).withStyle(ChatFormatting.DARK_PURPLE)));
+		tooltip.accept(Component.empty());
+		tooltip.accept(Component.translatable("item.minecolonies_tweaks.copyscroll.data", Component.empty().append(data.name()).withStyle(ChatFormatting.DARK_PURPLE)));
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
+	public InteractionResult use(Level level, Player player, InteractionHand hand)
 	{
 		var stack = player.getItemInHand(hand);
 
@@ -410,7 +411,7 @@ public class ItemCopyScroll extends Item
 		return Component.literal(producer.key);
 	}
 
-	public static ResourceLocation getModuleViewIcon(IBuildingModuleView view, BuildingEntry.ModuleProducer<?, ?> producer)
+	public static Identifier getModuleViewIcon(IBuildingModuleView view, BuildingEntry.ModuleProducer<?, ?> producer)
 	{
 		if (view != null)
 		{
@@ -444,25 +445,25 @@ public class ItemCopyScroll extends Item
 
 	}
 
-	public static record Entry(String key, Component name, ResourceLocation icon, CompoundTag tag)
+	public static record Entry(String key, Component name, Identifier icon, CompoundTag tag)
 	{
 		public static final Codec<Entry> CODEC = RecordCodecBuilder.create(builder -> builder.group(//
 				Codec.STRING.fieldOf("key").forGetter(Entry::key), //
 				ComponentSerialization.CODEC.optionalFieldOf("name", NAME_NULL).forGetter(Entry::name), //
-				ResourceLocation.CODEC.optionalFieldOf("icon", ICON_NULL).forGetter(Entry::icon), //
+				Identifier.CODEC.optionalFieldOf("icon", ICON_NULL).forGetter(Entry::icon), //
 				CompoundTag.CODEC.fieldOf("tag").forGetter(Entry::tag)//
 		).apply(builder, Entry::new));
 
 		public static final StreamCodec<RegistryFriendlyByteBuf, Entry> STREAM_CODEC = StreamCodec.composite(//
 				ByteBufCodecs.STRING_UTF8, Entry::key, //
 				ComponentSerialization.STREAM_CODEC, Entry::name, //
-				ResourceLocation.STREAM_CODEC, Entry::icon, //
+				Identifier.STREAM_CODEC, Entry::icon, //
 				ByteBufCodecs.COMPOUND_TAG, Entry::tag, //
 				Entry::new);
 
 	}
 
-	public static record ModuleViewInfo(String key, Component text, ResourceLocation icon)
+	public static record ModuleViewInfo(String key, Component text, Identifier icon)
 	{
 
 	}

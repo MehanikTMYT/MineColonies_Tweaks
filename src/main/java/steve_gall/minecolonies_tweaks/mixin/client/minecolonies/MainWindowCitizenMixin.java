@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.mixin.client.minecolonies;
 
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,7 +25,7 @@ import com.minecolonies.core.network.messages.server.colony.citizen.AdjustSkillC
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.PacketDistributor;
 import steve_gall.minecolonies_tweaks.core.client.gui.ViewOverrideExtension;
 import steve_gall.minecolonies_tweaks.core.common.MineColoniesTweaks;
@@ -41,7 +43,7 @@ public abstract class MainWindowCitizenMixin extends AbstractWindowCitizen imple
 	@Shadow(remap = false)
 	private int tick;
 
-	public MainWindowCitizenMixin(ICitizenDataView citizen, ResourceLocation ui)
+	public MainWindowCitizenMixin(ICitizenDataView citizen, Identifier ui)
 	{
 		super(citizen, ui);
 	}
@@ -53,7 +55,7 @@ public abstract class MainWindowCitizenMixin extends AbstractWindowCitizen imple
 		{
 			for (var skill : Skill.values())
 			{
-				PacketDistributor.sendToServer(new AdjustSkillCitizenMessage(this.colony, this.citizen, this.getSkillQuantity(+1), skill));
+				ClientPacketDistributor.sendToServer(new AdjustSkillCitizenMessage(this.colony, this.citizen, this.getSkillQuantity(+1), skill));
 			}
 
 		}
@@ -61,7 +63,7 @@ public abstract class MainWindowCitizenMixin extends AbstractWindowCitizen imple
 		{
 			for (var skill : Skill.values())
 			{
-				PacketDistributor.sendToServer(new AdjustSkillCitizenMessage(this.colony, this.citizen, this.getSkillQuantity(-1), skill));
+				ClientPacketDistributor.sendToServer(new AdjustSkillCitizenMessage(this.colony, this.citizen, this.getSkillQuantity(-1), skill));
 			}
 
 		}
@@ -77,12 +79,12 @@ public abstract class MainWindowCitizenMixin extends AbstractWindowCitizen imple
 	@Unique
 	private int getSkillQuantity(int quantity)
 	{
-		if (Screen.hasControlDown())
+		if (Minecraft.getInstance().hasControlDown())
 		{
 			quantity *= 2;
 		}
 
-		if (Screen.hasShiftDown())
+		if (Minecraft.getInstance().hasShiftDown())
 		{
 			quantity *= 5;
 		}

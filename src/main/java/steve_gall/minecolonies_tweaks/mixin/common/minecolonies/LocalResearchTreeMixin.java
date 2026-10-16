@@ -11,26 +11,26 @@ import com.minecolonies.api.colony.IColony;
 import com.minecolonies.api.research.ILocalResearch;
 import com.minecolonies.core.research.LocalResearchTree;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import steve_gall.minecolonies_tweaks.core.common.research.LocalResearchTreeExtension;
 
 @Mixin(value = LocalResearchTree.class, remap = false)
 public abstract class LocalResearchTreeMixin implements LocalResearchTreeExtension
 {
 	@Shadow(remap = false)
-	private Map<ResourceLocation, Map<ResourceLocation, ILocalResearch>> researchTree;
+	private Map<Identifier, Map<Identifier, ILocalResearch>> researchTree;
 	@Shadow(remap = false)
-	private Map<ResourceLocation, ILocalResearch> inProgress;
+	private Map<Identifier, ILocalResearch> inProgress;
 	@Shadow(remap = false)
-	private Set<ResourceLocation> isComplete;
+	private Set<Identifier> isComplete;
 	@Shadow(remap = false)
-	private Set<ResourceLocation> maxLevelResearchCompleted;
+	private Set<Identifier> maxLevelResearchCompleted;
 
 	@Shadow(remap = false)
 	abstract void resetEffects(IColony colony);
 
 	@Override
-	public void minecolonies_tweaks$reset(IColony colony, ResourceLocation branchId)
+	public void minecolonies_tweaks$reset(IColony colony, Identifier branchId)
 	{
 		var values = this.researchTree.get(branchId);
 

@@ -1,5 +1,8 @@
 package steve_gall.minecolonies_tweaks.core.client.gui;
 
+import net.minecraft.client.input.KeyEvent;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -256,7 +259,7 @@ public class BatchRepairBuildingsWindow extends AbstractWindowSkeleton
 		this.nameField.setFocus();
 		this.onExceptOpenablesOnlyChangedChanged();
 
-		PacketDistributor.sendToServer(new BatchRepairDataLoadMessage(this.colony));
+		ClientPacketDistributor.sendToServer(new BatchRepairDataLoadMessage(this.colony));
 	}
 
 	@Override
@@ -571,7 +574,7 @@ public class BatchRepairBuildingsWindow extends AbstractWindowSkeleton
 			}
 
 			this.savedDontRepairs.forEach(data.getMarkAsDontRepairs()::add);
-			PacketDistributor.sendToServer(new BatchRepairDataSaveMessage(this.colony, data));
+			ClientPacketDistributor.sendToServer(new BatchRepairDataSaveMessage(this.colony, data));
 
 			this.close();
 		}
@@ -905,14 +908,14 @@ public class BatchRepairBuildingsWindow extends AbstractWindowSkeleton
 	}
 
 	@Override
-	public boolean onUnhandledKeyTyped(int ch, int key)
+	public boolean onUnhandledKeyTyped(KeyEvent event)
 	{
-		if (key == GLFW.GLFW_KEY_ESCAPE)
+		if (event.isEscape())
 		{
 			this.selectedBuildingIndex = -1;
 		}
 
-		return super.onUnhandledKeyTyped(ch, key);
+		return super.onUnhandledKeyTyped(event);
 	}
 
 	protected void assign(BuildingInfo building, BuilderInfo builder)

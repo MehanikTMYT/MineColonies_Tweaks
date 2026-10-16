@@ -8,14 +8,14 @@ import org.jetbrains.annotations.NotNull;
 
 import com.minecolonies.api.equipment.registry.EquipmentTypeEntry;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public class OrToolType extends CustomToolType
 {
 	private final List<Supplier<EquipmentTypeEntry>> toolTypes;
 
-	public OrToolType(ResourceLocation name, Collection<Supplier<EquipmentTypeEntry>> toolTypes)
+	public OrToolType(Identifier name, Collection<Supplier<EquipmentTypeEntry>> toolTypes)
 	{
 		super(name);
 

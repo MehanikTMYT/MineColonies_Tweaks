@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.mixin.client.minecolonies;
 
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +24,7 @@ import com.minecolonies.core.client.gui.AbstractModuleWindow;
 import com.minecolonies.core.client.gui.modules.building.ItemListModuleWindow;
 import com.minecolonies.core.colony.buildings.moduleviews.ItemListModuleView;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.PacketDistributor;
 import steve_gall.minecolonies_tweaks.core.client.gui.ViewOverrideExtension;
 import steve_gall.minecolonies_tweaks.core.common.MineColoniesTweaks;
@@ -45,13 +47,13 @@ public abstract class ItemListModuleWindowMixin<T extends IBuildingModuleView> e
 	@Shadow(remap = false)
 	private List<ItemStorage> currentDisplayedList;
 
-	public ItemListModuleWindowMixin(T moduleView, ResourceLocation res)
+	public ItemListModuleWindowMixin(T moduleView, Identifier res)
 	{
 		super(moduleView, res);
 	}
 
 	@Inject(method = "<init>", remap = false, at = @At(value = "TAIL"))
-	private void init(IItemListModuleView moduleView, ResourceLocation res, CallbackInfo ci)
+	private void init(IItemListModuleView moduleView, Identifier res, CallbackInfo ci)
 	{
 		this.registerButton(minecolonies_tweaks$BUTTON_TOGGLE_IN_CURRENT, this::minecolonies_tweaks$toggleClick);
 		this.registerButton(minecolonies_tweaks$BUTTON_RESET_IN_CURRENT, this::minecolonies_tweaks$resetClick);
@@ -79,8 +81,8 @@ public abstract class ItemListModuleWindowMixin<T extends IBuildingModuleView> e
 
 		}
 
-		PacketDistributor.sendToServer(new AssignFilterableItemsMessage(module, Function.REMOVE, toRemoves));
-		PacketDistributor.sendToServer(new AssignFilterableItemsMessage(module, Function.ADD, toAdds));
+		ClientPacketDistributor.sendToServer(new AssignFilterableItemsMessage(module, Function.REMOVE, toRemoves));
+		ClientPacketDistributor.sendToServer(new AssignFilterableItemsMessage(module, Function.ADD, toAdds));
 		this.resourceList.refreshElementPanes();
 	}
 
@@ -91,7 +93,7 @@ public abstract class ItemListModuleWindowMixin<T extends IBuildingModuleView> e
 
 		list.removeAll(this.currentDisplayedList);
 
-		PacketDistributor.sendToServer(new AssignFilterableItemsMessage(module, Function.REMOVE, this.currentDisplayedList));
+		ClientPacketDistributor.sendToServer(new AssignFilterableItemsMessage(module, Function.REMOVE, this.currentDisplayedList));
 		this.resourceList.refreshElementPanes();
 	}
 

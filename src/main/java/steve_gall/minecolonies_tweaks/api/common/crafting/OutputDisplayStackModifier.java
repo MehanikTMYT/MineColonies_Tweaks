@@ -9,17 +9,17 @@ import org.jetbrains.annotations.Nullable;
 import com.minecolonies.api.crafting.AbstractRecipeType;
 import com.minecolonies.api.crafting.IRecipeStorage;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class OutputDisplayStackModifier extends AbstractRecipeType<IRecipeStorage>
 {
 	@NotNull
-	private final ResourceLocation id;
+	private final Identifier id;
 	@Nullable
 	private List<ItemStack> outputDisplayStacks;
 
-	public OutputDisplayStackModifier(@NotNull ResourceLocation id, @NotNull IRecipeStorage recipe)
+	public OutputDisplayStackModifier(@NotNull Identifier id, @NotNull IRecipeStorage recipe)
 	{
 		super(recipe);
 		this.id = id;
@@ -42,7 +42,7 @@ public abstract class OutputDisplayStackModifier extends AbstractRecipeType<IRec
 
 	@Override
 	@NotNull
-	public ResourceLocation getId()
+	public Identifier getId()
 	{
 		return this.id;
 	}

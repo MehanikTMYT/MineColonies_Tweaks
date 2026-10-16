@@ -16,7 +16,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class DiseaseArgumentType implements ArgumentType<Disease>
 {
@@ -39,7 +39,7 @@ public class DiseaseArgumentType implements ArgumentType<Disease>
 	@Override
 	public Disease parse(StringReader reader) throws CommandSyntaxException
 	{
-		var id = ResourceLocation.read(reader);
+		var id = Identifier.read(reader);
 		var disease = DiseasesListener.getDisease(id);
 
 		if (disease == null)

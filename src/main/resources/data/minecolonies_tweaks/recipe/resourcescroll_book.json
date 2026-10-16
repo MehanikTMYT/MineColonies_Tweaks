@@ -1,14 +1,10 @@
 {
-	"type": "minecraft:crafting_shapeless",
-	"ingredients": [
-		{
-			"item": "minecraft:book"
-		},
-		{
-			"tag": "minecolonies_tweaks:resourcescrollbook_element"
-		}
-	],
-	"result": {
-		"id": "minecolonies_tweaks:resourcescroll_book"
-	}
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:book",
+    "#minecolonies_tweaks:resourcescrollbook_element"
+  ],
+  "result": {
+    "id": "minecolonies_tweaks:resourcescroll_book"
+  }
 }

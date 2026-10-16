@@ -42,8 +42,8 @@ public class ModulePos
 
 	public ModulePos(@NotNull CompoundTag tag)
 	{
-		this.buildingPos = new BuildingPos(tag.getCompound(TAG_BUILDING_POS));
-		this.moduleName = tag.getString(TAG_MODULE_NAME);
+		this.buildingPos = new BuildingPos(tag.getCompoundOrEmpty(TAG_BUILDING_POS));
+		this.moduleName = tag.getStringOr(TAG_MODULE_NAME, "");
 	}
 
 	public ModulePos(@NotNull FriendlyByteBuf buffer)

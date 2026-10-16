@@ -18,7 +18,7 @@ import com.minecolonies.api.util.constant.WindowConstants;
 import com.minecolonies.core.client.gui.AbstractModuleWindow;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import steve_gall.minecolonies_tweaks.api.common.building.module.IMaximumStockEntry;
 import steve_gall.minecolonies_tweaks.api.common.building.module.IMaximumStockModuleView;
 import steve_gall.minecolonies_tweaks.core.common.MineColoniesTweaks;
@@ -130,12 +130,12 @@ public class MaximumStockModuleWindow extends AbstractModuleWindow<IMaximumStock
 		if (this.moduleView.hasMaximumStockReachedLimit())
 		{
 			button.setText(Component.translatable(LABEL_LIMIT_REACHED));
-			button.setImage(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/builderhut/builder_button_medium_disabled.png"));
+			button.setImage(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/builderhut/builder_button_medium_disabled.png"));
 		}
 		else
 		{
 			button.setText(Component.translatable(LABEL_ADD));
-			button.setImage(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/builderhut/builder_button_medium.png"));
+			button.setImage(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/builderhut/builder_button_medium.png"));
 		}
 
 		var kindsText = this.findPaneOfTypeByID("kinds", Text.class);

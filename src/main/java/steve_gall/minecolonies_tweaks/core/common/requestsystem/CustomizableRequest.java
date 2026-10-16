@@ -13,7 +13,7 @@ import com.minecolonies.core.colony.requestsystem.requests.AbstractRequest;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import steve_gall.minecolonies_tweaks.api.common.requestsystem.ICustomizableRequestable;
 
@@ -74,7 +74,7 @@ public class CustomizableRequest<R extends ICustomizableRequestable> extends Abs
 	}
 
 	@Override
-	public @NotNull ResourceLocation getDisplayIcon()
+	public @NotNull Identifier getDisplayIcon()
 	{
 		var object = this.getRequest().getObject();
 		return object != null ? object.getDisplayIcon() : super.getDisplayIcon();

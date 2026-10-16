@@ -5,7 +5,7 @@ import java.util.Collection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import steve_gall.minecolonies_tweaks.api.common.building.module.IIdListModule;
 import steve_gall.minecolonies_tweaks.api.common.building.module.IIdListModuleView;
@@ -23,9 +23,9 @@ public class AssignIdListMessage extends BuildingModuleMessage
 	}
 
 	private final Function function;
-	private final Collection<ResourceLocation> ids;
+	private final Collection<Identifier> ids;
 
-	public AssignIdListMessage(IIdListModuleView module, Function function, Collection<ResourceLocation> ids)
+	public AssignIdListMessage(IIdListModuleView module, Function function, Collection<Identifier> ids)
 	{
 		super(module);
 
@@ -38,7 +38,7 @@ public class AssignIdListMessage extends BuildingModuleMessage
 		super(buffer);
 
 		this.function = buffer.readEnum(Function.class);
-		this.ids = buffer.readList(FriendlyByteBuf::readResourceLocation);
+		this.ids = buffer.readList(FriendlyByteBuf::readIdentifier);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class AssignIdListMessage extends BuildingModuleMessage
 		super.encode(buffer);
 
 		buffer.writeEnum(this.function);
-		buffer.writeCollection(this.ids, FriendlyByteBuf::writeResourceLocation);
+		buffer.writeCollection(this.ids, FriendlyByteBuf::writeIdentifier);
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class AssignIdListMessage extends BuildingModuleMessage
 		return this.function;
 	}
 
-	public Collection<ResourceLocation> getIds()
+	public Collection<Identifier> getIds()
 	{
 		return this.ids;
 	}

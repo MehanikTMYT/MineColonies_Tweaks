@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.core.common.item;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
@@ -37,10 +39,10 @@ public class ItemInventoryScroll extends ItemBuildingLinkScroll
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag)
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag)
 	{
-		tooltip.add(TOOLTIP);
-		super.appendHoverText(stack, context, tooltip, flag);
+		tooltip.accept(TOOLTIP);
+		super.appendHoverText(stack, context, display, tooltip, flag);
 	}
 
 }

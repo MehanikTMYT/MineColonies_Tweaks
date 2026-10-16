@@ -4,24 +4,24 @@ import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface IIdListModule
 {
-	boolean addId(@NotNull ResourceLocation id);
+	boolean addId(@NotNull Identifier id);
 
-	boolean addIds(@NotNull Collection<ResourceLocation> ids);
+	boolean addIds(@NotNull Collection<Identifier> ids);
 
-	boolean containsId(@NotNull ResourceLocation id);
+	boolean containsId(@NotNull Identifier id);
 
-	boolean removeId(@NotNull ResourceLocation id);
+	boolean removeId(@NotNull Identifier id);
 
-	boolean removeIds(@NotNull Collection<ResourceLocation> ids);
+	boolean removeIds(@NotNull Collection<Identifier> ids);
 
 	void clearIds();
 
 	@NotNull
-	Collection<ResourceLocation> getIds();
+	Collection<Identifier> getIds();
 
 	@NotNull
 	String getListId();

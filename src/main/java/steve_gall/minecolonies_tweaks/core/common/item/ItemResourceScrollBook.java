@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.core.common.item;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,7 +17,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -80,12 +81,12 @@ public class ItemResourceScrollBook extends Item
 
 		if (compound != null)
 		{
-			var slots = compound.getList("slots", Tag.TAG_COMPOUND);
+			var slots = compound.getListOrEmpty("slots");
 			var size = slots.size();
 
 			for (var i = 0; i < size; i++)
 			{
-				var slotTag = slots.getCompound(i);
+				var slotTag = slots.getCompoundOrEmpty(i);
 				var slot = ItemSerializationHelper.deserializeTag(provider, slotTag);
 				items.set(i, slot);
 			}
@@ -96,11 +97,11 @@ public class ItemResourceScrollBook extends Item
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag)
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag)
 	{
-		super.appendHoverText(stack, context, tooltip, flag);
+		super.appendHoverText(stack, context, display, tooltip, flag);
 
-		tooltip.addAll(TOOLTIPS);
+		TOOLTIPS.forEach(tooltip);
 	}
 
 	@Override
@@ -127,7 +128,7 @@ public class ItemResourceScrollBook extends Item
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
+	public InteractionResult use(Level level, Player player, InteractionHand hand)
 	{
 		var stack = player.getItemInHand(hand);
 
@@ -144,7 +145,7 @@ public class ItemResourceScrollBook extends Item
 			this.openWindow(level.registryAccess(), stack);
 		}
 
-		return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+		return InteractionResult.SUCCESS;
 	}
 
 	public void openWindow(HolderLookup.Provider provider, ItemStack stack)
@@ -179,7 +180,7 @@ public class ItemResourceScrollBook extends Item
 	{
 		if (hand == InteractionHand.MAIN_HAND)
 		{
-			return player.getInventory().selected;
+			return player.getInventory().getSelectedSlot();
 		}
 		else if (hand == InteractionHand.OFF_HAND)
 		{

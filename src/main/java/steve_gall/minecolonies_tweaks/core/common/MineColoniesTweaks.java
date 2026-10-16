@@ -1,5 +1,6 @@
 package steve_gall.minecolonies_tweaks.core.common;
 
+import net.neoforged.api.distmarker.Dist;
 import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
@@ -17,9 +18,8 @@ import com.minecolonies.core.items.ItemLargeBottle;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.fml.common.Mod;
@@ -239,16 +239,16 @@ public class MineColoniesTweaks
 		{
 			if (item instanceof ItemLargeBottle)
 			{
-				e.registerItem(Capabilities.FluidHandler.ITEM, (stack, ctx) -> new LargeBottleCapabilityProvider(stack), item);
+				e.registerItem(Capabilities.Fluid.ITEM, (stack, access) -> new LargeBottleCapabilityProvider(access), item);
 			}
 
 		}
 
 	}
 
-	public static ResourceLocation rl(String path)
+	public static Identifier rl(String path)
 	{
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+		return Identifier.fromNamespaceAndPath(MOD_ID, path);
 	}
 
 }

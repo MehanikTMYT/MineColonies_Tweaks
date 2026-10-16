@@ -16,7 +16,7 @@ import com.minecolonies.api.util.constant.TypeConstants;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import steve_gall.minecolonies_tweaks.api.common.CustomizableObjectRegistry;
 
 public class CustomizableRequestable implements ICustomizableRequestable, IRequestable
@@ -28,7 +28,7 @@ public class CustomizableRequestable implements ICustomizableRequestable, IReque
 	public static final String TAG_OBJECT = "Object";
 
 	@NotNull
-	private final ResourceLocation id;
+	private final Identifier id;
 	@Nullable
 	private final IRequestableObject object;
 
@@ -38,7 +38,7 @@ public class CustomizableRequestable implements ICustomizableRequestable, IReque
 		this.object = object;
 	}
 
-	public CustomizableRequestable(@NotNull ResourceLocation id, @Nullable IRequestableObject object)
+	public CustomizableRequestable(@NotNull Identifier id, @Nullable IRequestableObject object)
 	{
 		this.id = id;
 		this.object = object;
@@ -56,28 +56,28 @@ public class CustomizableRequestable implements ICustomizableRequestable, IReque
 	@NotNull
 	public static CustomizableRequestable deserialize(@NotNull HolderLookup.Provider provider, @NotNull IFactoryController controller, @NotNull CompoundTag compound)
 	{
-		var id = ResourceLocation.parse(compound.getString(TAG_ID));
-		var object = RequestableObjectRegistry.INSTANCE.deserializeWithoutId(provider, controller, compound.getCompound(TAG_OBJECT), id);
+		var id = Identifier.parse(compound.getStringOr(TAG_ID, ""));
+		var object = RequestableObjectRegistry.INSTANCE.deserializeWithoutId(provider, controller, compound.getCompoundOrEmpty(TAG_OBJECT), id);
 		return new CustomizableRequestable(id, object);
 	}
 
 	public static void serialize(@NotNull IFactoryController controller, @NotNull RegistryFriendlyByteBuf buffer, @NotNull CustomizableRequestable input)
 	{
-		buffer.writeResourceLocation(input.getId());
+		buffer.writeIdentifier(input.getId());
 		buffer.writeNbt(RequestableObjectRegistry.INSTANCE.serializeWithoutId(buffer.registryAccess(), controller, input.getObject()));
 	}
 
 	@NotNull
 	public static CustomizableRequestable deserialize(@NotNull IFactoryController controller, @NotNull RegistryFriendlyByteBuf buffer)
 	{
-		var id = buffer.readResourceLocation();
+		var id = buffer.readIdentifier();
 		var object = RequestableObjectRegistry.INSTANCE.deserializeWithoutId(buffer.registryAccess(), controller, buffer.readNbt(), id);
 		return new CustomizableRequestable(id, object);
 	}
 
 	@Override
 	@NotNull
-	public ResourceLocation getId()
+	public Identifier getId()
 	{
 		return this.id;
 	}

@@ -1,11 +1,12 @@
 pluginManagement {
     repositories {
-        maven { url "https://maven.neoforged.net/releases" }
         gradlePluginPortal()
+        maven { url = 'https://maven.neoforged.net/releases' }
         mavenCentral()
     }
 }
 
 plugins {
-    id "org.gradle.toolchains.foojay-resolver-convention" version "1.0.0"
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
+rootProject.name = 'MineColonies_Tweaks'

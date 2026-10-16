@@ -7,18 +7,18 @@ import com.minecolonies.api.colony.requestsystem.factory.IFactoryController;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public abstract class SimpleObjectRegistry<OBJECT> extends CustomizableObjectRegistry<OBJECT, SimpleObjectRegistry.Entry<OBJECT>>
 {
 	@SuppressWarnings("unchecked")
-	public <TYPED_OBJECT extends OBJECT> void register(@NotNull ResourceLocation id, @NotNull StaticSerializer<TYPED_OBJECT> serializer, @NotNull Deserializer<TYPED_OBJECT> deserializer)
+	public <TYPED_OBJECT extends OBJECT> void register(@NotNull Identifier id, @NotNull StaticSerializer<TYPED_OBJECT> serializer, @NotNull Deserializer<TYPED_OBJECT> deserializer)
 	{
 		super.register((Entry<OBJECT>) new Entry<>(id, serializer, deserializer));
 	}
 
 	@SuppressWarnings("unchecked")
-	public <TYPED_OBJECT extends OBJECT> void register(@NotNull ResourceLocation id, @NotNull InstanceSerializer<TYPED_OBJECT> serializer, @NotNull Deserializer<TYPED_OBJECT> deserializer)
+	public <TYPED_OBJECT extends OBJECT> void register(@NotNull Identifier id, @NotNull InstanceSerializer<TYPED_OBJECT> serializer, @NotNull Deserializer<TYPED_OBJECT> deserializer)
 	{
 		super.register((Entry<OBJECT>) new Entry<>(id, (provider, controller, tag, object) -> serializer.serializeObject(object, provider, controller, tag), deserializer));
 	}
@@ -42,7 +42,7 @@ public abstract class SimpleObjectRegistry<OBJECT> extends CustomizableObjectReg
 		@NotNull
 		private Deserializer<OBJECT> deserializer;
 
-		public Entry(@NotNull ResourceLocation id, @NotNull StaticSerializer<OBJECT> serializer, @NotNull Deserializer<OBJECT> deserializer)
+		public Entry(@NotNull Identifier id, @NotNull StaticSerializer<OBJECT> serializer, @NotNull Deserializer<OBJECT> deserializer)
 		{
 			super(id);
 			this.serializer = serializer;

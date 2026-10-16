@@ -19,13 +19,13 @@ import steve_gall.minecolonies_tweaks.core.common.item.ItemUniversityScroll;
 
 public class MCTweaksItems
 {
-	public static final DeferredRegister<Item> REGISTER = DeferredRegister.create(Registries.ITEM, MineColoniesTweaks.MOD_ID);
+	public static final DeferredRegister.Items REGISTER = DeferredRegister.createItems(MineColoniesTweaks.MOD_ID);
 	public static final Map<DyeColor, DeferredHolder<Item, ItemResourceScroll>> COLOR_RESOURCE_SCROLLS;
-	public static final DeferredHolder<Item, ItemResourceScrollBook> RESOURCESCROLL_BOOK = REGISTER.register("resourcescroll_book", () -> new ItemResourceScrollBook(new Item.Properties(), 9 * 3));
-	public static final DeferredHolder<Item, ItemInventoryScroll> INVENTORYSCROLL = REGISTER.register("inventoryscroll", () -> new ItemInventoryScroll(new Item.Properties()));
+	public static final DeferredHolder<Item, ItemResourceScrollBook> RESOURCESCROLL_BOOK = REGISTER.registerItem("resourcescroll_book", properties -> new ItemResourceScrollBook(properties, 9 * 3));
+	public static final DeferredHolder<Item, ItemInventoryScroll> INVENTORYSCROLL = REGISTER.registerItem("inventoryscroll", properties -> new ItemInventoryScroll(properties));
 	public static final Map<DyeColor, DeferredHolder<Item, ItemInventoryScroll>> COLOR_INVENTORY_SCROLLS;
-	public static final DeferredHolder<Item, ItemUniversityScroll> UNIVERSITYSCROLL = REGISTER.register("universityscroll", () -> new ItemUniversityScroll(new Item.Properties()));
-	public static final DeferredHolder<Item, ItemCopyScroll> COPYSCROLL = REGISTER.register("copyscroll", () -> new ItemCopyScroll(new Item.Properties()));
+	public static final DeferredHolder<Item, ItemUniversityScroll> UNIVERSITYSCROLL = REGISTER.registerItem("universityscroll", properties -> new ItemUniversityScroll(properties));
+	public static final DeferredHolder<Item, ItemCopyScroll> COPYSCROLL = REGISTER.registerItem("copyscroll", properties -> new ItemCopyScroll(properties));
 
 	static
 	{
@@ -36,10 +36,10 @@ public class MCTweaksItems
 
 		for (var color : DyeColor.values())
 		{
-			var resourceScroll = REGISTER.register("resourcescroll_" + color.getName().toLowerCase(), () -> new ItemResourceScroll(new Item.Properties()));
+			var resourceScroll = REGISTER.registerItem("resourcescroll_" + color.getName().toLowerCase(), properties -> new ItemResourceScroll(properties));
 			colorResourceScrolls.put(color, resourceScroll);
 
-			var warehouseScroll = REGISTER.register("inventoryscroll_" + color.getName().toLowerCase(), () -> new ItemInventoryScroll(new Item.Properties()));
+			var warehouseScroll = REGISTER.registerItem("inventoryscroll_" + color.getName().toLowerCase(), properties -> new ItemInventoryScroll(properties));
 			colorWarehouseScrolls.put(color, warehouseScroll);
 		}
 

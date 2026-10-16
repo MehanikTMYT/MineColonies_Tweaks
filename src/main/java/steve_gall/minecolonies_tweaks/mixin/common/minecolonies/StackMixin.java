@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.mixin.common.minecolonies;
 
+import net.minecraft.core.UUIDUtil;
+
 import java.util.UUID;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,7 +33,7 @@ public abstract class StackMixin implements StackExtension
 
 		if (requester != null)
 		{
-			cir.getReturnValue().putUUID("minecolonies_tweaks$requester", requester);
+			cir.getReturnValue().store("minecolonies_tweaks$requester", UUIDUtil.CODEC, requester);
 
 		}
 
@@ -40,9 +42,9 @@ public abstract class StackMixin implements StackExtension
 	@Inject(method = "deserialize(Lnet/minecraft/core/HolderLookup$Provider;Lcom/minecolonies/api/colony/requestsystem/factory/IFactoryController;Lnet/minecraft/nbt/CompoundTag;)Lcom/minecolonies/api/colony/requestsystem/requestable/Stack;", remap = false, at = @At(value = "TAIL"))
 	private static void deserialize(HolderLookup.Provider provider, IFactoryController controller, CompoundTag compound, CallbackInfoReturnable<Stack> cir)
 	{
-		if (compound.hasUUID("minecolonies_tweaks$requester"))
+		if (compound.read("minecolonies_tweaks$requester", UUIDUtil.CODEC).isPresent())
 		{
-			((StackExtension) cir.getReturnValue()).minecolonies_tweaks$setRequester(compound.getUUID("minecolonies_tweaks$requester"));
+			((StackExtension) cir.getReturnValue()).minecolonies_tweaks$setRequester(compound.read("minecolonies_tweaks$requester", UUIDUtil.CODEC).orElseThrow());
 		}
 
 	}

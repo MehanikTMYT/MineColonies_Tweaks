@@ -14,7 +14,7 @@ import com.minecolonies.core.client.gui.AbstractBuildingWindow;
 import com.minecolonies.core.colony.buildings.workerbuildings.BuildingWareHouse;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import steve_gall.minecolonies_tweaks.core.common.MineColoniesTweaks;
 import steve_gall.minecolonies_tweaks.core.common.building.BuildingEmptySlotCounter;
 
@@ -26,13 +26,13 @@ public abstract class AbstractBuildingMainWindowMixin<B extends IBuildingView> e
 	@Unique
 	private BuildingEmptySlotCounter minecolonies_tweaks$slotCounter;
 
-	public AbstractBuildingMainWindowMixin(B buildingView, ResourceLocation res)
+	public AbstractBuildingMainWindowMixin(B buildingView, Identifier res)
 	{
 		super(buildingView, res);
 	}
 
 	@Inject(method = "<init>", remap = false, at = @At(value = "TAIL"), cancellable = false)
-	private void init(B building, ResourceLocation resource, CallbackInfo ci)
+	private void init(B building, Identifier resource, CallbackInfo ci)
 	{
 		if (building instanceof BuildingWareHouse.View)
 		{

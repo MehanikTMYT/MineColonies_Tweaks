@@ -13,7 +13,7 @@ import com.minecolonies.api.util.ItemStackUtils;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import com.minecolonies.api.research.ResearchIngredient;
 
 public class ResearchCostSelector
 {
@@ -24,7 +24,7 @@ public class ResearchCostSelector
 
 	private final BOWindow origin;
 	private final IGlobalResearch research;
-	private final List<SizedIngredient> costs;
+	private final List<ResearchIngredient> costs;
 	private final Consumer<List<ItemStorage>> consumer;
 
 	private List<ItemStorage> selectedCosts;

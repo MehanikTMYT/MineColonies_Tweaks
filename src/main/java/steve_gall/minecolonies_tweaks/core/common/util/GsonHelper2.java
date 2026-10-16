@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 
 public class GsonHelper2
@@ -27,7 +27,7 @@ public class GsonHelper2
 		value.ifPresent(v -> consumer.accept(memberName, v));
 	}
 
-	public static ResourceLocation convertToResourceLocation(@NotNull JsonElement json, @NotNull String memberName, @NotNull String fallbackNamespace)
+	public static Identifier convertToResourceLocation(@NotNull JsonElement json, @NotNull String memberName, @NotNull String fallbackNamespace)
 	{
 		if (json.isJsonPrimitive())
 		{
@@ -35,27 +35,27 @@ public class GsonHelper2
 
 			if (raw.contains(":"))
 			{
-				return ResourceLocation.parse(raw);
+				return Identifier.parse(raw);
 			}
 			else
 			{
-				return ResourceLocation.fromNamespaceAndPath(fallbackNamespace, raw);
+				return Identifier.fromNamespaceAndPath(fallbackNamespace, raw);
 			}
 
 		}
 		else
 		{
-			throw new JsonSyntaxException("Expected " + memberName + " to be a ResourceLocation, was " + GsonHelper.getType(json));
+			throw new JsonSyntaxException("Expected " + memberName + " to be a Identifier, was " + GsonHelper.getType(json));
 		}
 
 	}
 
-	public static ResourceLocation getAsResourceLocation(@NotNull JsonObject json, @NotNull String memberName)
+	public static Identifier getAsResourceLocation(@NotNull JsonObject json, @NotNull String memberName)
 	{
-		return getAsResourceLocation(json, memberName, ResourceLocation.DEFAULT_NAMESPACE);
+		return getAsResourceLocation(json, memberName, Identifier.DEFAULT_NAMESPACE);
 	}
 
-	public static ResourceLocation getAsResourceLocation(@NotNull JsonObject json, @NotNull String memberName, @NotNull String fallbackNamespace)
+	public static Identifier getAsResourceLocation(@NotNull JsonObject json, @NotNull String memberName, @NotNull String fallbackNamespace)
 	{
 		if (json.has(memberName))
 		{
@@ -63,7 +63,7 @@ public class GsonHelper2
 		}
 		else
 		{
-			throw new JsonSyntaxException("Missing " + memberName + ", expected to find a ResourceLocation");
+			throw new JsonSyntaxException("Missing " + memberName + ", expected to find a Identifier");
 		}
 
 	}

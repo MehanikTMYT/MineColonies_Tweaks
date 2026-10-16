@@ -1,5 +1,9 @@
 package steve_gall.minecolonies_tweaks.mixin.client.minecolonies;
 
+import net.minecraft.client.Minecraft;
+
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+
 import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +26,7 @@ import com.minecolonies.core.tileentities.TileEntityScarecrow;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.neoforged.neoforge.network.PacketDistributor;
 import steve_gall.minecolonies_tweaks.core.client.gui.ViewOverrideExtension;
@@ -48,7 +52,7 @@ public abstract class WindowFieldMixin extends AbstractWindowSkeleton implements
 	@Shadow(remap = false)
 	private TileEntityScarecrow tileEntityScarecrow;
 
-	public WindowFieldMixin(ResourceLocation resource)
+	public WindowFieldMixin(Identifier resource)
 	{
 		super(resource);
 	}
@@ -96,7 +100,7 @@ public abstract class WindowFieldMixin extends AbstractWindowSkeleton implements
 		this.tileEntityScarecrow.setFieldSize(direction.get(), newRadius);
 		button.setText(Component.literal(String.valueOf(newRadius)));
 
-		PacketDistributor.sendToServer(new FarmFieldPlotResize2Message(newRadius, direction.get(), tileEntityScarecrow.getBlockPos()));
+		ClientPacketDistributor.sendToServer(new FarmFieldPlotResize2Message(newRadius, direction.get(), tileEntityScarecrow.getBlockPos()));
 	}
 
 	@Unique
@@ -119,7 +123,7 @@ public abstract class WindowFieldMixin extends AbstractWindowSkeleton implements
 
 	private void minecolonies_tweaks$changRadius(Direction direction, int delta)
 	{
-		if (Screen.hasShiftDown())
+		if (Minecraft.getInstance().hasShiftDown())
 		{
 			delta *= minecolonies_tweaks$SHIFT_MULTIPLIER;
 		}
@@ -131,7 +135,7 @@ public abstract class WindowFieldMixin extends AbstractWindowSkeleton implements
 		var arrowButton = this.findPaneOfTypeByID(DIRECTIONAL_BUTTON_ID_PREFIX + direction.getName(), Button.class);
 		arrowButton.setText(Component.literal(String.valueOf(newRadius)));
 
-		PacketDistributor.sendToServer(new FarmFieldPlotResize2Message(newRadius, direction, this.tileEntityScarecrow.getBlockPos()));
+		ClientPacketDistributor.sendToServer(new FarmFieldPlotResize2Message(newRadius, direction, this.tileEntityScarecrow.getBlockPos()));
 	}
 
 	@Unique

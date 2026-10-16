@@ -1,33 +1,31 @@
 {
-	"required": true,
-	"package": "steve_gall.minecolonies_tweaks.mixin.client",
-	"minVersion": "0.8.5",
-	"compatibilityLevel": "JAVA_17",
-	"client": [
-		"minecraft.AbstractContainerScreenMixin",
-		"minecraft.ScreenMixin",
-		
-		"minecolonies.AbstractBuildingMainWindowMixin",
-		"minecolonies.AbstractWindowSkeletonMixin",
-		"minecolonies.AbstractWindowSkeletonsMixin",
-		"minecolonies.ColonyBlueprintRendererBuildGogglesMixin",
-		"minecolonies.ItemListModuleWindowMixin",
-		"minecolonies.MainWindowCitizenMixin",
-		"minecolonies.TabsWindowModuleMixin",
-		"minecolonies.TileEntityScarecrowRendererMixin",
-		"minecolonies.ToolRecipeCategoryMixin",
-		"minecolonies.TownhallWindowMainPageMixin",
-		"minecolonies.WindowFieldMixin",
-		"minecolonies.WindowHutAllInventoryMixin",
-		"minecolonies.WindowCraftingsMixin",
-		"minecolonies.WindowInventoriesMixin",
-		"minecolonies.WindowResearchTreeMixin",
-
-		"blockui.PaneMixin",
-		"blockui.ViewMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	},
-	"refmap": "${mod_id}.mixin.refmap.json"
+  "required": true,
+  "package": "steve_gall.minecolonies_tweaks.mixin.client",
+  "minVersion": "0.8.5",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "minecraft.AbstractContainerScreenMixin",
+    "minecraft.ScreenMixin",
+    "minecolonies.AbstractBuildingMainWindowMixin",
+    "minecolonies.AbstractWindowSkeletonMixin",
+    "minecolonies.AbstractWindowSkeletonsMixin",
+    "minecolonies.ColonyBlueprintRendererBuildGogglesMixin",
+    "minecolonies.ItemListModuleWindowMixin",
+    "minecolonies.MainWindowCitizenMixin",
+    "minecolonies.TabsWindowModuleMixin",
+    "minecolonies.TileEntityScarecrowRendererMixin",
+    "minecolonies.TownhallWindowMainPageMixin",
+    "minecolonies.WindowFieldMixin",
+    "minecolonies.WindowHutAllInventoryMixin",
+    "minecolonies.WindowCraftingsMixin",
+    "minecolonies.WindowInventoriesMixin",
+    "minecolonies.WindowResearchTreeMixin",
+    "blockui.PaneMixin",
+    "blockui.ViewMixin",
+    "minecolonies.ScarecrowRenderStateMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "${mod_id}.mixin.refmap.json"
 }

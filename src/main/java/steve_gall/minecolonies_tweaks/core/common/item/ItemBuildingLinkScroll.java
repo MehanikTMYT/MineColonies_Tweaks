@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.core.common.item;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +15,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -119,7 +120,7 @@ public abstract class ItemBuildingLinkScroll extends Item
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
+	public InteractionResult use(Level level, Player player, InteractionHand hand)
 	{
 		var stack = player.getItemInHand(hand);
 
@@ -128,14 +129,14 @@ public abstract class ItemBuildingLinkScroll extends Item
 			this.openWindow(stack, player);
 		}
 
-		return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag)
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag)
 	{
-		super.appendHoverText(stack, context, tooltip, flag);
-		tooltip.add(TOOLIP_HOW_TO_LINK);
+		super.appendHoverText(stack, context, display, tooltip, flag);
+		tooltip.accept(TOOLIP_HOW_TO_LINK);
 
 		var pos = getPos(stack);
 
@@ -144,8 +145,8 @@ public abstract class ItemBuildingLinkScroll extends Item
 			return;
 		}
 
-		tooltip.add(Component.empty());
-		tooltip.add(Component.translatable("item.minecolonies_tweaks.buildingscroll.linked_pos", pos.getX(), pos.getY(), pos.getZ()));
+		tooltip.accept(Component.empty());
+		tooltip.accept(Component.translatable("item.minecolonies_tweaks.buildingscroll.linked_pos", pos.getX(), pos.getY(), pos.getZ()));
 
 		var buildingView = pos.getBuildingView();
 		Component buildingName = null;
@@ -159,7 +160,7 @@ public abstract class ItemBuildingLinkScroll extends Item
 			buildingName = Component.empty().append(BuildingUtils.getDisplayName(buildingView)).withStyle(ChatFormatting.DARK_PURPLE);
 		}
 
-		tooltip.add(Component.translatable("item.minecolonies_tweaks.buildingscroll.linked_building", buildingName));
+		tooltip.accept(Component.translatable("item.minecolonies_tweaks.buildingscroll.linked_building", buildingName));
 	}
 
 }

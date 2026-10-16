@@ -13,7 +13,7 @@ import com.minecolonies.core.datalistener.ResearchListener;
 import com.minecolonies.core.research.GlobalResearch;
 import com.minecolonies.core.research.ResearchEffectCategory;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import steve_gall.minecolonies_tweaks.core.common.research.GlobalResearchEffectExtension;
 import steve_gall.minecolonies_tweaks.core.common.research.ResearchEffectCategoryExtension;
 
@@ -24,7 +24,7 @@ public abstract class ResearchListenerMixin
 	private static final String RESEARCH_OFFLINE_RUNNABLE_PROP = "offlineRunnable";
 
 	@Inject(method = "parseResearches", remap = false, at = @At(value = "TAIL"), cancellable = false)
-	private void parseResearches(Map<ResourceLocation, JsonElement> object, Map<ResourceLocation, ResearchEffectCategory> effectCategories, Collection<ResourceLocation> removeResearches, Collection<ResourceLocation> removeBranches, CallbackInfoReturnable<Map<ResourceLocation, GlobalResearch>> cir)
+	private void parseResearches(Map<Identifier, JsonElement> object, Map<Identifier, ResearchEffectCategory> effectCategories, Collection<Identifier> removeResearches, Collection<Identifier> removeBranches, CallbackInfoReturnable<Map<Identifier, GlobalResearch>> cir)
 	{
 		var map = cir.getReturnValue();
 
@@ -53,7 +53,7 @@ public abstract class ResearchListenerMixin
 	}
 
 	@Inject(method = "parseResearchEffectCategories", remap = false, at = @At(value = "TAIL"), cancellable = false)
-	private void parseResearchEffectCategories(Map<ResourceLocation, JsonElement> object, CallbackInfoReturnable<Map<ResourceLocation, ResearchEffectCategory>> cir)
+	private void parseResearchEffectCategories(Map<Identifier, JsonElement> object, CallbackInfoReturnable<Map<Identifier, ResearchEffectCategory>> cir)
 	{
 		for (var entry : cir.getReturnValue().entrySet())
 		{

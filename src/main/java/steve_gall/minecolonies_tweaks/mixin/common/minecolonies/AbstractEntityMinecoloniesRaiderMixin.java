@@ -1,5 +1,6 @@
 package steve_gall.minecolonies_tweaks.mixin.common.minecolonies;
 
+import net.minecraft.server.level.ServerLevel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,8 +22,8 @@ public abstract class AbstractEntityMinecoloniesRaiderMixin
 	@Shadow(remap = false)
 	private boolean tempEnvDamageImmunity;
 
-	@Inject(method = "hurt", remap = true, at = @At(value = "HEAD"), cancellable = false)
-	private void hurt(DamageSource damageSource, float damage, CallbackInfoReturnable<Boolean> cir)
+	@Inject(method = "hurtServer", remap = true, at = @At(value = "HEAD"), cancellable = false)
+	private void hurt(ServerLevel level, DamageSource damageSource, float damage, CallbackInfoReturnable<Boolean> cir)
 	{
 		if (MCTweaksConfigServer.INSTANCE.monsters.disableImmunity.get())
 		{
@@ -32,7 +33,7 @@ public abstract class AbstractEntityMinecoloniesRaiderMixin
 
 	}
 
-	@ModifyConstant(method = "hurt", remap = true, constant = @Constant(floatValue = 30.0F))
+	@ModifyConstant(method = "hurtServer", remap = true, constant = @Constant(floatValue = 30.0F))
 	private float hurt_MIN_THORNS_DAMAG(float MIN_THORNS_DAMAGE)
 	{
 		if (MCTweaksConfigServer.INSTANCE.monsters.disableThorns.get())

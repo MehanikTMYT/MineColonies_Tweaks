@@ -15,7 +15,7 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import steve_gall.minecolonies_tweaks.core.common.MineColoniesTweaks;
 
 public abstract class AbstractIdListModule extends AbstractBuildingModule implements ICopyableModule, IIdListModule
@@ -25,7 +25,7 @@ public abstract class AbstractIdListModule extends AbstractBuildingModule implem
 	@NotNull
 	private final String listId;
 	@NotNull
-	private final Set<ResourceLocation> ids;
+	private final Set<Identifier> ids;
 
 	public AbstractIdListModule(@NotNull String listId)
 	{
@@ -37,11 +37,11 @@ public abstract class AbstractIdListModule extends AbstractBuildingModule implem
 	public void deserializeNBT(@NotNull HolderLookup.Provider provider, @NotNull CompoundTag compound)
 	{
 		this.ids.clear();
-		var idsTag = compound.getList(TAG_IDS, Tag.TAG_STRING);
+		var idsTag = compound.getListOrEmpty(TAG_IDS);
 
 		for (var i = 0; i < idsTag.size(); i++)
 		{
-			this.ids.add(ResourceLocation.parse(idsTag.getString(i)));
+			this.ids.add(Identifier.parse(idsTag.getStringOr(i, "")));
 		}
 
 	}
@@ -65,15 +65,15 @@ public abstract class AbstractIdListModule extends AbstractBuildingModule implem
 		super.serializeToView(buf);
 
 		buf.writeUtf(this.listId);
-		buf.writeCollection(this.ids, FriendlyByteBuf::writeResourceLocation);
+		buf.writeCollection(this.ids, FriendlyByteBuf::writeIdentifier);
 	}
 
-	protected void onIdAdded(@NotNull ResourceLocation id)
+	protected void onIdAdded(@NotNull Identifier id)
 	{
 
 	}
 
-	protected void onIdRemoved(@NotNull ResourceLocation id)
+	protected void onIdRemoved(@NotNull Identifier id)
 	{
 
 	}
@@ -89,7 +89,7 @@ public abstract class AbstractIdListModule extends AbstractBuildingModule implem
 	}
 
 	@Override
-	public boolean addId(@NotNull ResourceLocation id)
+	public boolean addId(@NotNull Identifier id)
 	{
 		var added = this.ids.add(id);
 
@@ -104,7 +104,7 @@ public abstract class AbstractIdListModule extends AbstractBuildingModule implem
 	}
 
 	@Override
-	public boolean addIds(@NotNull Collection<ResourceLocation> ids)
+	public boolean addIds(@NotNull Collection<Identifier> ids)
 	{
 		var anyAdded = false;
 
@@ -128,13 +128,13 @@ public abstract class AbstractIdListModule extends AbstractBuildingModule implem
 	}
 
 	@Override
-	public boolean containsId(@NotNull ResourceLocation id)
+	public boolean containsId(@NotNull Identifier id)
 	{
 		return this.ids.contains(id);
 	}
 
 	@Override
-	public boolean removeId(@NotNull ResourceLocation id)
+	public boolean removeId(@NotNull Identifier id)
 	{
 		var removed = this.ids.remove(id);
 
@@ -149,7 +149,7 @@ public abstract class AbstractIdListModule extends AbstractBuildingModule implem
 	}
 
 	@Override
-	public boolean removeIds(@NotNull Collection<ResourceLocation> ids)
+	public boolean removeIds(@NotNull Collection<Identifier> ids)
 	{
 		var anyRemoved = false;
 
@@ -183,7 +183,7 @@ public abstract class AbstractIdListModule extends AbstractBuildingModule implem
 	}
 
 	@Override
-	public @NotNull Set<ResourceLocation> getIds()
+	public @NotNull Set<Identifier> getIds()
 	{
 		return new HashSet<>(this.ids);
 	}

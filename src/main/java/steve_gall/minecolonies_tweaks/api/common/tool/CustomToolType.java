@@ -16,7 +16,7 @@ import com.google.gson.JsonObject;
 import com.minecolonies.api.equipment.registry.EquipmentTypeEntry;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.fml.loading.FMLPaths;
@@ -25,7 +25,7 @@ import steve_gall.minecolonies_tweaks.core.common.MineColoniesTweaks;
 public class CustomToolType
 {
 	private static boolean INITIALIZED = false;
-	private static final Map<ResourceLocation, CustomToolType> MAP = new HashMap<>();
+	private static final Map<Identifier, CustomToolType> MAP = new HashMap<>();
 	private static final List<CustomToolType> LIST = new ArrayList<>();
 
 	public static void init()
@@ -98,7 +98,7 @@ public class CustomToolType
 	}
 
 	@NotNull
-	public static Map<ResourceLocation, CustomToolType> map()
+	public static Map<Identifier, CustomToolType> map()
 	{
 		return Collections.unmodifiableMap(MAP);
 	}
@@ -116,13 +116,13 @@ public class CustomToolType
 	}
 
 	@Nullable
-	public static CustomToolType find(@NotNull ResourceLocation name)
+	public static CustomToolType find(@NotNull Identifier name)
 	{
 		return MAP.get(name);
 	}
 
 	@NotNull
-	private final ResourceLocation name;
+	private final Identifier name;
 
 	@Nullable
 	private Component displayName;
@@ -133,19 +133,19 @@ public class CustomToolType
 	@Nullable
 	private EquipmentTypeEntry toolType;
 
-	public CustomToolType(@NotNull ResourceLocation name)
+	public CustomToolType(@NotNull Identifier name)
 	{
 		this.name = name;
 	}
 
 	@NotNull
-	public static String getFallbackTranslationKey(@NotNull ResourceLocation name)
+	public static String getFallbackTranslationKey(@NotNull Identifier name)
 	{
 		return MineColoniesTweaks.MOD_ID + ".custom_tooltype." + ToolTypeTags.getTagPath(name).replace('/', '.');
 	}
 
 	@NotNull
-	public final ResourceLocation getName()
+	public final Identifier getName()
 	{
 		return this.name;
 	}

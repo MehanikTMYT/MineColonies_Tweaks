@@ -1,32 +1,26 @@
 package steve_gall.minecolonies_tweaks.core.client.gui;
 
-import org.joml.Matrix4f;
-
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
+/**
+ * GUI fluid rendering.
+ * 26.1.2 port: the immediate-mode Tesselator/RenderSystem path is gone; the fluid sprite and tint come from the
+ * fluid model set and are drawn as tiled sprites, the partial fill height is cut with a scissor.
+ */
 public class RenderUtils
 {
 	public static final int FLUID_TEXTURE_SIZE = 16;
 
-	public static void renderFluid(PoseStack poseStack, int width, int height, FluidStack fluidStack)
+	public static void renderFluid(GuiGraphicsExtractor graphics, int width, int height, FluidStack fluidStack)
 	{
-		renderFluid(poseStack, width, height, fluidStack, fluidStack.getAmount());
+		renderFluid(graphics, width, height, fluidStack, fluidStack.getAmount());
 	}
 
-	public static void renderFluid(PoseStack poseStack, int width, int height, FluidStack fluidStack, int capacity)
+	public static void renderFluid(GuiGraphicsExtractor graphics, int width, int height, FluidStack fluidStack, int capacity)
 	{
 		var fluid = fluidStack.getFluid();
 
@@ -35,82 +29,41 @@ public class RenderUtils
 			return;
 		}
 
-		var renderProperties = IClientFluidTypeExtensions.of(fluidStack.getFluid());
-		var stillTexture = renderProperties.getStillTexture(fluidStack);
-		var stillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(stillTexture);
+		var fluidModel = Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(fluid.defaultFluidState());
 
-		if (stillSprite == null)
+		if (fluidModel == null)
 		{
 			return;
 		}
 
-		var tintColor = renderProperties.getTintColor(fluidStack);
-		var scachedHeight = height * (fluidStack.getAmount() / Math.max(capacity, 1.0D));
-		renderTiledSprite(poseStack, width, height, tintColor, (int) scachedHeight, stillSprite);
-	}
+		var sprite = fluidModel.stillMaterial().sprite();
+		var tintColor = -1;
+		var tintSource = fluidModel.fluidTintSource();
 
-	public static void renderTiledSprite(PoseStack poseStack, int tiledWidth, int tiledHeight, int color, int scachedHeight, TextureAtlasSprite sprite)
-	{
-		RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
-		var matrix = poseStack.last().pose();
-		setShaderColor(color);
-
-		var xTileCount = tiledWidth / FLUID_TEXTURE_SIZE;
-		var xRemainder = tiledWidth - (xTileCount * FLUID_TEXTURE_SIZE);
-		var yTileCount = scachedHeight / FLUID_TEXTURE_SIZE;
-		var yRemainder = scachedHeight - (yTileCount * FLUID_TEXTURE_SIZE);
-
-		for (var xTile = 0; xTile <= xTileCount; xTile++)
+		if (tintSource != null)
 		{
-			for (var yTile = 0; yTile <= yTileCount; yTile++)
+			tintColor = tintSource.colorAsStack(fluidStack);
+		}
+
+		var scachedHeight = (int) (height * (fluidStack.getAmount() / Math.max(capacity, 1.0D)));
+
+		if (scachedHeight <= 0)
+		{
+			return;
+		}
+
+		graphics.enableScissor(0, height - scachedHeight, width, height);
+
+		for (var x = 0; x < width; x += FLUID_TEXTURE_SIZE)
+		{
+			for (var y = height - FLUID_TEXTURE_SIZE; y > -FLUID_TEXTURE_SIZE; y -= FLUID_TEXTURE_SIZE)
 			{
-				var width = (xTile == xTileCount) ? xRemainder : FLUID_TEXTURE_SIZE;
-				var height = (yTile == yTileCount) ? yRemainder : FLUID_TEXTURE_SIZE;
-
-				if (width > 0 && height > 0)
-				{
-					var x = xTile * FLUID_TEXTURE_SIZE;
-					var y = tiledHeight - ((yTile + 1) * FLUID_TEXTURE_SIZE);
-					var maskTop = FLUID_TEXTURE_SIZE - height;
-					var maskRight = FLUID_TEXTURE_SIZE - width;
-					renderTextureWithMasking(matrix, x, y, sprite, maskTop, maskRight, 100);
-				}
-
+				graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x, y, FLUID_TEXTURE_SIZE, FLUID_TEXTURE_SIZE, tintColor | 0xFF000000);
 			}
 
 		}
 
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-	}
-
-	public static void setShaderColor(int color)
-	{
-		var a = ((color >> 0x18) & 0xFF) / 255.0F;
-		var r = ((color >> 0x10) & 0xFF) / 255.0F;
-		var g = ((color >> 0x08) & 0xFF) / 255.0F;
-		var b = ((color >> 0x00) & 0xFF) / 255.0F;
-		RenderSystem.setShaderColor(r, g, b, a);
-	}
-
-	public static void renderTextureWithMasking(Matrix4f matrix, float xCoord, float yCoord, TextureAtlasSprite textureSprite, long maskTop, long maskRight, float zLevel)
-	{
-		var f = 16.0F;
-		var u0 = textureSprite.getU0();
-		var u1 = textureSprite.getU1();
-		var v0 = textureSprite.getV0();
-		var v1 = textureSprite.getV1();
-		u1 = u1 - (maskRight / f * (u1 - u0));
-		v1 = v1 - (maskTop / f * (v1 - v0));
-
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-
-		var tessellator = Tesselator.getInstance();
-		var bufferBuilder = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-		bufferBuilder.addVertex(matrix, xCoord, yCoord + f, zLevel).setUv(u0, v1);
-		bufferBuilder.addVertex(matrix, xCoord + f - maskRight, yCoord + f, zLevel).setUv(u1, v1);
-		bufferBuilder.addVertex(matrix, xCoord + f - maskRight, yCoord + maskTop, zLevel).setUv(u1, v0);
-		bufferBuilder.addVertex(matrix, xCoord, yCoord + maskTop, zLevel).setUv(u0, v0);
-		BufferUploader.drawWithShader(bufferBuilder.build());
+		graphics.disableScissor();
 	}
 
 	private RenderUtils()

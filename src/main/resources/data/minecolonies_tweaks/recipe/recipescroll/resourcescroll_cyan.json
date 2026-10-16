@@ -1,20 +1,14 @@
 {
-	"type": "minecolonies_tweaks:component_merge_shapeless",
-	"ingredients": [
-		{
-			"type": "neoforge:difference",
-			"base": {
-				"tag": "minecolonies_tweaks:resourcescrolls"
-			},
-			"subtracted": {
-				"item": "minecolonies_tweaks:resourcescroll_cyan"
-			}
-		},
-		{
-			"tag": "c:dyes/cyan"
-		}
-	],
-	"result": {
-		"id": "minecolonies_tweaks:resourcescroll_cyan"
-	}
+  "type": "minecolonies_tweaks:component_merge_shapeless",
+  "ingredients": [
+    {
+      "base": "#minecolonies_tweaks:resourcescrolls",
+      "subtracted": "minecolonies_tweaks:resourcescroll_cyan",
+      "neoforge:ingredient_type": "neoforge:difference"
+    },
+    "#c:dyes/cyan"
+  ],
+  "result": {
+    "id": "minecolonies_tweaks:resourcescroll_cyan"
+  }
 }

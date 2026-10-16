@@ -1,5 +1,8 @@
 package steve_gall.minecolonies_tweaks.core.client.gui;
 
+import net.minecraft.client.input.KeyEvent;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -201,7 +204,7 @@ public class BatchUpgradeBuildingsWindow extends AbstractWindowSkeleton
 		this.updateBuildingList();
 		this.onBuildingCountsChanged();
 
-		PacketDistributor.sendToServer(new BatchUpgradeDataLoadMessage(this.colony));
+		ClientPacketDistributor.sendToServer(new BatchUpgradeDataLoadMessage(this.colony));
 	}
 
 	@Override
@@ -509,7 +512,7 @@ public class BatchUpgradeBuildingsWindow extends AbstractWindowSkeleton
 			}
 
 			this.savedDontUpgrades.forEach(data.getMarkAsDontUpgrades()::add);
-			PacketDistributor.sendToServer(new BatchUpgradeDataSaveMessage(this.colony, data));
+			ClientPacketDistributor.sendToServer(new BatchUpgradeDataSaveMessage(this.colony, data));
 
 			this.close();
 		}
@@ -819,14 +822,14 @@ public class BatchUpgradeBuildingsWindow extends AbstractWindowSkeleton
 	}
 
 	@Override
-	public boolean onUnhandledKeyTyped(int ch, int key)
+	public boolean onUnhandledKeyTyped(KeyEvent event)
 	{
-		if (key == GLFW.GLFW_KEY_ESCAPE)
+		if (event.isEscape())
 		{
 			this.selectedBuildingIndex = -1;
 		}
 
-		return super.onUnhandledKeyTyped(ch, key);
+		return super.onUnhandledKeyTyped(event);
 	}
 
 	protected void assign(BuildingInfo building, BuilderInfo builder)

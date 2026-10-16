@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.core.common.command;
 
+import net.minecraft.server.permissions.Permissions;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -115,7 +117,7 @@ public class CitizenCommands
 
 	public static IColony check(CommandContext<CommandSourceStack> context, boolean needPermission)
 	{
-		if (needPermission && !context.getSource().hasPermission(Commands.LEVEL_GAMEMASTERS))
+		if (needPermission && !context.getSource().permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
 		{
 			context.getSource().sendSuccess(() -> Component.translatable(CommandTranslationConstants.COMMAND_REQUIRES_OP), true);
 			return null;
@@ -130,7 +132,7 @@ public class CitizenCommands
 			return null;
 		}
 
-		if (!context.getSource().hasPermission(Commands.LEVEL_OWNERS))
+		if (!context.getSource().permissions().hasPermission(Permissions.COMMANDS_OWNER))
 		{
 			context.getSource().sendSuccess(() -> Component.translatable(CommandTranslationConstants.COMMAND_DISABLED_IN_CONFIG), true);
 			return null;

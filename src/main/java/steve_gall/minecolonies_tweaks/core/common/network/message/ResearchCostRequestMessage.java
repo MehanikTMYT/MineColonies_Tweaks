@@ -12,7 +12,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import steve_gall.minecolonies_tweaks.api.common.building.BuildingPos;
 import steve_gall.minecolonies_tweaks.api.common.network.AbstractMessage;
@@ -27,11 +27,11 @@ public class ResearchCostRequestMessage extends AbstractMessage
 	public static final CustomPacketPayload.Type<ResearchCostRequestMessage> TYPE = new CustomPacketPayload.Type<>(MineColoniesTweaks.rl("research_cost_request"));
 
 	private final BuildingPos buildingPos;
-	private final ResourceLocation branch;
-	private final ResourceLocation research;
+	private final Identifier branch;
+	private final Identifier research;
 	private final List<ItemStorage> items;
 
-	public ResearchCostRequestMessage(BuildingPos buildingPos, ResourceLocation branch, ResourceLocation research, List<ItemStorage> items)
+	public ResearchCostRequestMessage(BuildingPos buildingPos, Identifier branch, Identifier research, List<ItemStorage> items)
 	{
 		this.buildingPos = buildingPos;
 		this.branch = branch;
@@ -44,8 +44,8 @@ public class ResearchCostRequestMessage extends AbstractMessage
 		super(buffer);
 
 		this.buildingPos = new BuildingPos(buffer);
-		this.branch = buffer.readResourceLocation();
-		this.research = buffer.readResourceLocation();
+		this.branch = buffer.readIdentifier();
+		this.research = buffer.readIdentifier();
 		this.items = buffer.readList(SerializationHelper::deserialize);
 	}
 
@@ -55,8 +55,8 @@ public class ResearchCostRequestMessage extends AbstractMessage
 		super.encode(buffer);
 
 		this.buildingPos.serializeBuffer(buffer);
-		buffer.writeResourceLocation(this.branch);
-		buffer.writeResourceLocation(this.research);
+		buffer.writeIdentifier(this.branch);
+		buffer.writeIdentifier(this.research);
 		buffer.writeCollection(this.items, SerializationHelper::serialize);
 	}
 
@@ -109,12 +109,12 @@ public class ResearchCostRequestMessage extends AbstractMessage
 		return this.buildingPos;
 	}
 
-	public ResourceLocation getBranch()
+	public Identifier getBranch()
 	{
 		return this.branch;
 	}
 
-	public ResourceLocation getResearch()
+	public Identifier getResearch()
 	{
 		return this.research;
 	}

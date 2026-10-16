@@ -11,7 +11,7 @@ import com.minecolonies.core.client.gui.modules.TabsWindowModule.TabImageSide;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 @Mixin(value = TabsWindowModule.class, remap = false)
 public abstract class TabsWindowModuleMixin
@@ -19,7 +19,7 @@ public abstract class TabsWindowModuleMixin
 	private final Object2IntMap<TabImageSide> minecolonies_tweaks$counts = new Object2IntOpenHashMap<>();
 
 	@WrapMethod(method = "renderTabButton", remap = false)
-	private void renderTabButton(int index, TabImageSide side, ResourceLocation icon, MutableComponent hoverText, ButtonHandler handler, Operation<Void> operation)
+	private void renderTabButton(int index, TabImageSide side, Identifier icon, MutableComponent hoverText, ButtonHandler handler, Operation<Void> operation)
 	{
 		var count = this.minecolonies_tweaks$counts.getOrDefault(side, 0);
 

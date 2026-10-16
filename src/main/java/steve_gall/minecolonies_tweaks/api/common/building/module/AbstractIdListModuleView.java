@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.api.common.building.module;
 
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -11,7 +13,7 @@ import com.minecolonies.api.colony.buildings.modules.AbstractBuildingModuleView;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.PacketDistributor;
 import steve_gall.minecolonies_tweaks.core.common.network.message.AssignIdListMessage;
 import steve_gall.minecolonies_tweaks.core.common.network.message.AssignIdListMessage.Function;
@@ -19,7 +21,7 @@ import steve_gall.minecolonies_tweaks.core.common.network.message.AssignIdListMe
 public abstract class AbstractIdListModuleView extends AbstractBuildingModuleView implements IIdListModuleView
 {
 	private String listId;
-	private final Set<ResourceLocation> ids;
+	private final Set<Identifier> ids;
 
 	public AbstractIdListModuleView()
 	{
@@ -33,33 +35,33 @@ public abstract class AbstractIdListModuleView extends AbstractBuildingModuleVie
 		this.listId = buf.readUtf();
 
 		this.ids.clear();
-		this.ids.addAll(buf.readCollection(HashSet::new, FriendlyByteBuf::readResourceLocation));
+		this.ids.addAll(buf.readCollection(HashSet::new, FriendlyByteBuf::readIdentifier));
 	}
 
 	@Override
-	public boolean addIds(@NotNull Collection<ResourceLocation> ids)
+	public boolean addIds(@NotNull Collection<Identifier> ids)
 	{
-		PacketDistributor.sendToServer(new AssignIdListMessage(this, Function.ADD, ids));
+		ClientPacketDistributor.sendToServer(new AssignIdListMessage(this, Function.ADD, ids));
 		return this.ids.addAll(ids);
 	}
 
 	@Override
-	public boolean containsId(@NotNull ResourceLocation id)
+	public boolean containsId(@NotNull Identifier id)
 	{
 		return this.ids.contains(id);
 	}
 
 	@Override
-	public boolean removeIds(@NotNull Collection<ResourceLocation> ids)
+	public boolean removeIds(@NotNull Collection<Identifier> ids)
 	{
-		PacketDistributor.sendToServer(new AssignIdListMessage(this, Function.REMOVE, ids));
+		ClientPacketDistributor.sendToServer(new AssignIdListMessage(this, Function.REMOVE, ids));
 		return this.ids.removeAll(ids);
 	}
 
 	@Override
 	public void clearIds()
 	{
-		PacketDistributor.sendToServer(new AssignIdListMessage(this, Function.CLEAR, Collections.emptyList()));
+		ClientPacketDistributor.sendToServer(new AssignIdListMessage(this, Function.CLEAR, Collections.emptyList()));
 		this.ids.clear();
 	}
 

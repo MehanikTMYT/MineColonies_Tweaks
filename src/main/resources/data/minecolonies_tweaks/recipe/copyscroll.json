@@ -1,26 +1,18 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"category": "misc",
-	"key": {
-		"P": {
-			"tag": "c:leathers"
-		},
-		"C": {
-			"tag": "c:dusts/redstone"
-		},
-		"T": {
-			"item": "structurize:sceptergold"
-		},
-		"X": {
-			"item": "minecraft:stick"
-		}
-	},
-	"pattern": [
-		"XTX",
-		"XPX",
-		"XCX"
-	],
-	"result": {
-		"id": "minecolonies_tweaks:copyscroll"
-	}
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": "#c:leathers",
+    "C": "#c:dusts/redstone",
+    "T": "structurize:sceptergold",
+    "X": "minecraft:stick"
+  },
+  "pattern": [
+    "XTX",
+    "XPX",
+    "XCX"
+  ],
+  "result": {
+    "id": "minecolonies_tweaks:copyscroll"
+  }
 }

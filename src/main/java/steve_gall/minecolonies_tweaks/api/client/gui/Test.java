@@ -1,6 +1,6 @@
 package steve_gall.minecolonies_tweaks.api.client.gui;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.RandomState;
 import steve_gall.minecolonies_tweaks.core.common.config.MCTweaksConfigCommon;
@@ -8,7 +8,7 @@ import steve_gall.minecolonies_tweaks.core.common.config.MCTweaksConfigCommon;
 public class Test
 {
 
-	public static boolean test(RandomState randomState, ResourceLocation randomKey, ChunkPos chunkPos)
+	public static boolean test(RandomState randomState, Identifier randomKey, ChunkPos chunkPos)
 	{
 		var chance = MCTweaksConfigCommon.INSTANCE.worldGens.emptyColoniesGenerationChance.get();
 

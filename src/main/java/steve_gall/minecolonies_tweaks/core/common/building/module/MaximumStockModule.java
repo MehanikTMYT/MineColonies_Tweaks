@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.core.common.building.module;
 
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -134,12 +136,12 @@ public class MaximumStockModule extends AbstractBuildingModule implements IMaxim
 	{
 		this.maximumStock.clear();
 
-		var maximumStackTag = compound.getList("maximumStock", Tag.TAG_COMPOUND);
+		var maximumStackTag = compound.getListOrEmpty("maximumStock");
 
 		for (var i = 0; i < maximumStackTag.size(); i++)
 		{
-			var entryTag = maximumStackTag.getCompound(i);
-			var stack = ItemSerializationHelper.deserializeTag(provider, entryTag.getCompound("key"));
+			var entryTag = maximumStackTag.getCompoundOrEmpty(i);
+			var stack = ItemSerializationHelper.deserializeTag(provider, entryTag.getCompoundOrEmpty("key"));
 
 			if (stack.isEmpty())
 			{
@@ -147,7 +149,7 @@ public class MaximumStockModule extends AbstractBuildingModule implements IMaxim
 			}
 
 			var key = new ItemStorage(stack);
-			var value = entryTag.getInt("value");
+			var value = entryTag.getIntOr("value", 0);
 			this.maximumStock.put(key, value);
 		}
 
@@ -248,14 +250,14 @@ public class MaximumStockModule extends AbstractBuildingModule implements IMaxim
 			}
 
 			this.maximumStock.put(new ItemStorage(stack.copy()), quantity);
-			PacketDistributor.sendToServer(MaximumStockUpdateMessage.add(this, stack, quantity));
+			ClientPacketDistributor.sendToServer(MaximumStockUpdateMessage.add(this, stack, quantity));
 		}
 
 		@Override
 		public void removeMaximumStock(ItemStack stack)
 		{
 			this.maximumStock.removeInt(new ItemStorage(stack));
-			PacketDistributor.sendToServer(MaximumStockUpdateMessage.remove(this, stack));
+			ClientPacketDistributor.sendToServer(MaximumStockUpdateMessage.remove(this, stack));
 		}
 
 		@Override

@@ -16,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.world.item.ItemStackTemplate;
 import steve_gall.minecolonies_tweaks.core.common.requestsystem.StackExtension;
 
 @Mixin(value = AbstractBuilding.class, remap = false)
@@ -42,7 +43,7 @@ public abstract class AbstractBuildingMixin extends AbstractBuildingContainer
 					var itemStack = stack.getStack();
 					var itemStackComponent = ComponentUtils.wrapInSquareBrackets(request.getShortDisplayString());
 					itemStackComponent.withStyle(itemStack.getRarity().getStyleModifier());
-					itemStackComponent.withStyle(s -> s.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new HoverEvent.ItemStackInfo(itemStack))));
+					itemStackComponent.withStyle(s -> s.withHoverEvent(new HoverEvent.ShowItem(ItemStackTemplate.fromNonEmptyStack(itemStack))));
 					player.sendSystemMessage(Component.translatable("minecolonies_tweaks.text.postbox_delivery_completed", itemStackComponent));
 				}
 

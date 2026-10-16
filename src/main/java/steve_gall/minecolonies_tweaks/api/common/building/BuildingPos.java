@@ -23,7 +23,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 
 public class BuildingPos
@@ -52,8 +52,8 @@ public class BuildingPos
 
 	public BuildingPos(@NotNull CompoundTag tag)
 	{
-		this.dimensionId = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag.getString(TAG_DIMENSION_ID)));
-		this.colonyId = tag.getInt(TAG_COLONY_ID);
+		this.dimensionId = ResourceKey.create(Registries.DIMENSION, Identifier.parse(tag.getStringOr(TAG_DIMENSION_ID, "")));
+		this.colonyId = tag.getIntOr(TAG_COLONY_ID, 0);
 		this.buildingId = BlockPosUtil.read(tag, TAG_BUILDING_ID);
 	}
 
@@ -149,7 +149,7 @@ public class BuildingPos
 	public CompoundTag serializeNBT()
 	{
 		var tag = new CompoundTag();
-		tag.putString(TAG_DIMENSION_ID, this.dimensionId.location().toString());
+		tag.putString(TAG_DIMENSION_ID, this.dimensionId.identifier().toString());
 		tag.putInt(TAG_COLONY_ID, this.colonyId);
 		BlockPosUtil.write(tag, TAG_BUILDING_ID, this.buildingId);
 

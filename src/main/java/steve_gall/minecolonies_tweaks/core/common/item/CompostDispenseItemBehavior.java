@@ -28,7 +28,7 @@ public class CompostDispenseItemBehavior extends OptionalDispenseItemBehavior
 		{
 			this.setSuccess(false);
 		}
-		else if (!level.isClientSide)
+		else if (!level.isClientSide())
 		{
 			level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, pos, 15);
 		}

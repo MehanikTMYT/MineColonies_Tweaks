@@ -22,7 +22,7 @@ public record BuildingCost(BlockPos id, List<ItemStorage> costs)
 	public static BuildingCost deserialize(HolderLookup.Provider provider, CompoundTag tag)
 	{
 		var id = BlockPosUtil.read(tag, TAG_ID);
-		var costs = NBTUtils.streamCompound(tag.getList(TAG_COSTS, Tag.TAG_COMPOUND)).map(SerializationHelper.<ItemStorage> deserializerTag(provider)).toList();
+		var costs = NBTUtils.streamCompound(tag.getListOrEmpty(TAG_COSTS)).map(SerializationHelper.<ItemStorage> deserializerTag(provider)).toList();
 		return new BuildingCost(id, costs);
 	}
 

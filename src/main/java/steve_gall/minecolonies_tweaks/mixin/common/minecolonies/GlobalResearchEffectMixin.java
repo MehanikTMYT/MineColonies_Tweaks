@@ -25,12 +25,12 @@ public abstract class GlobalResearchEffectMixin implements GlobalResearchEffectE
 	@Inject(method = "<init>(Lnet/minecraft/nbt/CompoundTag;)V", remap = false, at = @At(value = "TAIL"), cancellable = false)
 	private void init(CompoundTag nbt, CallbackInfo ci)
 	{
-		if (nbt.contains(TAG_COMMAND, Tag.TAG_STRING))
+		if (nbt.getString(TAG_COMMAND).isPresent())
 		{
-			this.minecolonies_tweaks$command = nbt.getString(TAG_COMMAND);
+			this.minecolonies_tweaks$command = nbt.getStringOr(TAG_COMMAND, "");
 		}
 
-		this.minecolonies_tweaks$isOfflineRunnable = nbt.getBoolean(TAG_IS_OFFLINE_RUNNABLE);
+		this.minecolonies_tweaks$isOfflineRunnable = nbt.getBooleanOr(TAG_IS_OFFLINE_RUNNABLE, false);
 	}
 
 	@Inject(method = "writeToNBT", remap = false, at = @At(value = "TAIL"), cancellable = false)

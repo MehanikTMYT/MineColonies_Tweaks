@@ -26,7 +26,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class UniversityDashboardWindow extends AbstractWindowSkeleton
 {
@@ -35,7 +35,7 @@ public class UniversityDashboardWindow extends AbstractWindowSkeleton
 
 	public UniversityDashboardWindow(UniversityResearchModuleView moduleView)
 	{
-		super(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "gui/layouthuts/layoutuniversity.xml"));
+		super(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "gui/layouthuts/layoutuniversity.xml"));
 		this.buildingView = moduleView.getBuildingView();
 		this.fake = new UniversityModuleWindow(moduleView)
 		{
@@ -56,7 +56,7 @@ public class UniversityDashboardWindow extends AbstractWindowSkeleton
 		var branches = IGlobalResearchTree.getInstance().getBranches();
 		branches.sort(Comparator.comparingInt(branchId -> IGlobalResearchTree.getInstance().getBranchData(branchId).getSortOrder()));
 
-		var visibleBranches = new ArrayList<ResourceLocation>();
+		var visibleBranches = new ArrayList<Identifier>();
 		var allRequirements = new ArrayList<List<MutableComponent>>();
 
 		for (var branch : branches)
@@ -76,7 +76,7 @@ public class UniversityDashboardWindow extends AbstractWindowSkeleton
 		updateResearchCount(0);
 	}
 
-	public List<MutableComponent> getHidingRequirementDesc(ResourceLocation branch)
+	public List<MutableComponent> getHidingRequirementDesc(Identifier branch)
 	{
 		var branchRequirements = new ArrayList<MutableComponent>();
 		var researchTree = IGlobalResearchTree.getInstance();
@@ -128,7 +128,7 @@ public class UniversityDashboardWindow extends AbstractWindowSkeleton
 
 		if (button.getParent() != null)
 		{
-			var branchName = button.getParent() == null ? null : ResourceLocation.tryParse(button.getParent().getID());
+			var branchName = button.getParent() == null ? null : Identifier.tryParse(button.getParent().getID());
 
 			if (branchName != null && IGlobalResearchTree.getInstance().getBranches().contains(branchName))
 			{
@@ -157,10 +157,10 @@ public class UniversityDashboardWindow extends AbstractWindowSkeleton
 
 	private static class ResearchListProvider implements ScrollingList.DataProvider
 	{
-		private final List<ResourceLocation> branches;
+		private final List<Identifier> branches;
 		private final List<List<MutableComponent>> requirements;
 
-		public ResearchListProvider(List<ResourceLocation> branches, List<List<MutableComponent>> requirements)
+		public ResearchListProvider(List<Identifier> branches, List<List<MutableComponent>> requirements)
 		{
 			this.branches = branches;
 			this.requirements = requirements;

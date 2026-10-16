@@ -36,15 +36,15 @@ public abstract class ColonyMixin implements ColonyExtension
 	public void read(CompoundTag compound, HolderLookup.Provider provider, CallbackInfo ci)
 	{
 		var registryAccess = ServerLifecycleHooks.getCurrentServer().registryAccess();
-		this.minecolonies_tweaks$batchRepair.deserializeNBT(registryAccess, compound.getCompound(MineColoniesTweaks.rl("batch_repair").toString()));
-		this.minecolonies_tweaks$batchUpgrade.deserializeNBT(registryAccess, compound.getCompound(MineColoniesTweaks.rl("batch_upgrade").toString()));
+		this.minecolonies_tweaks$batchRepair.deserializeNBT(registryAccess, compound.getCompoundOrEmpty(MineColoniesTweaks.rl("batch_repair").toString()));
+		this.minecolonies_tweaks$batchUpgrade.deserializeNBT(registryAccess, compound.getCompoundOrEmpty(MineColoniesTweaks.rl("batch_upgrade").toString()));
 
-		var commandQueue = compound.getList(MineColoniesTweaks.rl("command_queue").toString(), Tag.TAG_STRING);
+		var commandQueue = compound.getListOrEmpty(MineColoniesTweaks.rl("command_queue").toString());
 		this.minecolonies_tweaks$commandQueue.clear();
 
 		for (var i = 0; i < commandQueue.size(); i++)
 		{
-			this.minecolonies_tweaks$commandQueue.add(commandQueue.getString(i));
+			this.minecolonies_tweaks$commandQueue.add(commandQueue.getStringOr(i, ""));
 		}
 
 	}

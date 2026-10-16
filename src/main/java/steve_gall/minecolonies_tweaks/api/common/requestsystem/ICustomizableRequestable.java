@@ -4,12 +4,12 @@ import org.jetbrains.annotations.NotNull;
 
 import com.minecolonies.api.colony.requestsystem.requestable.IRequestable;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface ICustomizableRequestable extends IRequestable
 {
 	@NotNull
-	ResourceLocation getId();
+	Identifier getId();
 
 	@NotNull
 	IRequestableObject getObject();

@@ -13,24 +13,7 @@ public class CuriosCompat
 
 	public static ItemStack findFirstCurio(Player player, Predicate<ItemStack> predicate)
 	{
-		var handler = CuriosApi.getCuriosHelper().getEquippedCurios(player).orElse(null);
-
-		if (handler != null)
-		{
-			for (var i = 0; i < handler.getSlots(); i++)
-			{
-				var stack = handler.getStackInSlot(i);
-
-				if (predicate.test(stack))
-				{
-					return stack;
-				}
-
-			}
-
-		}
-
-		return ItemStack.EMPTY;
+		return CuriosApi.getCuriosInventory(player).flatMap(inventory -> inventory.findFirstCurio(predicate)).map(result -> result.stack()).orElse(ItemStack.EMPTY);
 	}
 
 	private CuriosCompat()

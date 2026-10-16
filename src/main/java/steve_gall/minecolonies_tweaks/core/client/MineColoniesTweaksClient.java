@@ -1,5 +1,7 @@
 package steve_gall.minecolonies_tweaks.core.client;
 
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+
 import com.ldtteam.blockui.BOScreen;
 import com.ldtteam.blockui.Loader;
 import com.minecolonies.api.items.ModItems;
@@ -87,7 +89,7 @@ public class MineColoniesTweaksClient
 	{
 		if (ModKeyMappings.RESOURCESCROLL_BOOK.get().consumeClick())
 		{
-			PacketDistributor.sendToServer(new ResourcescrollBookOpenMessage());
+			ClientPacketDistributor.sendToServer(new ResourcescrollBookOpenMessage());
 		}
 
 	}
