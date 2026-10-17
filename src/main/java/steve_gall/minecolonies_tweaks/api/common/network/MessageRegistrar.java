@@ -17,7 +17,8 @@ public class MessageRegistrar
 
 	public <MESSAGE extends AbstractMessage> void playBidirectional(CustomPacketPayload.Type<MESSAGE> type, WrappedStreamDecoder<MESSAGE> decoder)
 	{
-		this.registrar.playBidirectional(type, this.codec(decoder), MESSAGE::handle);
+		// fleet 26.1.2: the 3-argument overload only registers the serverbound handler; pass it for clientbound too
+		this.registrar.playBidirectional(type, this.codec(decoder), MESSAGE::handle, MESSAGE::handle);
 	}
 
 	public <MESSAGE extends AbstractMessage> void playToClient(CustomPacketPayload.Type<MESSAGE> type, WrappedStreamDecoder<MESSAGE> decoder)
